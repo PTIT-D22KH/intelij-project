@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head(title='Employee Management')}">
+  <link rel="stylesheet" href="/css/employee-management.css">
+</head>
+<body>
+<nav th:replace="~{fragments/header :: body}"></nav>
+<div class="container table-container">
+  <h2 class="text-center">Employee Management</h2>
+  <div class="form-group text-center">
+    <a href="/admin/employee/add" class="btn btn-success">Add Employee</a>
+  </div>
+  <form th:action="@{/admin/employee/delete}" method="post">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th><input type="checkbox" id="selectAll"></th>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Full Name</th>
+        <th>Email</th>
+        <th>Address</th>
+        <th>Date of Birth</th>
+        <th>Salary</th>
+        <th>Action</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="account : ${accounts}">
+        <td><input type="checkbox" name="selectedIds" th:value="${account.id}"></td>
+        <td th:text="${account.id}"></td>
+        <td th:text="${account.username}"></td>
+        <td th:text="${account.fullname}"></td>
+        <td th:text="${account.email}"></td>
+        <td th:text="${account.address}"></td>
+        <td th:text="${#dates.format(account.dob, 'yyyy-MM-dd')}"></td>
+        <td th:text="${account.salary}"></td>
+        <td class="action-buttons">
+          <a th:href="@{/admin/employee/edit/{id}(id=${account.id})}" class="btn btn-warning btn-sm">Edit</a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="form-group text-center">
+      <button type="submit" class="btn btn-danger">Delete Selected</button>
+    </div>
+  </form>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="/js/employee-management.js"></script>
+</body>
+</html>

@@ -17,11 +17,6 @@ public class DashboardController {
     public String getDashboard(@AuthenticationPrincipal User user, Model model) {
         Account account = accountService.findByUsername(user.getUsername());
         model.addAttribute("account", account);
-        System.out.println(account.getRoles().getId());
-        if (account.getRoles().getId().equals("ROLE_GUEST")) {
-            model.addAttribute("message", "You are logged in as a guest. Please log in as a user to access the dashboard.");
-            return "login";
-        }
         return "dashboard";
     }
 }

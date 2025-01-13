@@ -13,6 +13,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class AccountServiceImpl implements AccountService, UserDetailsService {
@@ -31,5 +34,26 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
     @Override
     public Account findByUsername(String username) {
         return accountRepository.findByUsername(username).orElse(null);
+    }
+
+    @Override
+    public void save(Account account) {
+        accountRepository.save(account);
+    }
+
+    @Override
+    public List<Account> findAll() {
+        return accountRepository.findAll();
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        accountRepository.deleteById(id);
+    }
+
+    @Override
+    public Account findById(Long id) {
+        return accountRepository.findById(id).orElse(null);
     }
 }

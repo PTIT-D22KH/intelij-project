@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title th:text="${title}">Admin Dashboard</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">Admin Dashboard</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Management
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="/admin/customer" th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'') or hasAuthority(''ROLE_EMPLOYEE'')')}">Customer Management</a>
+          <a class="dropdown-item" href="/admin/order" th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'') or hasAuthority(''ROLE_EMPLOYEE'')')}">Order Management</a>
+          <a class="dropdown-item" href="/admin/shipment" th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'') or hasAuthority(''ROLE_EMPLOYEE'')')}">Shipment Management</a>
+          <a class="dropdown-item" href="/admin/employee" th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">Employee Management</a>
+          <a class="dropdown-item" href="/admin/food-category" th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">Food Category Management</a>
+          <a class="dropdown-item" href="/admin/food-item" th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">Food Item Management</a>
+          <a class="dropdown-item" href="/admin/table" th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">Table Management</a>
+          <a class="dropdown-item" href="/profile">Profile</a>
+          <a class="dropdown-item" href="/dashboard">Return to Dashboard</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <form th:action="@{/logout}" method="post" class="form-inline">
+          <button type="submit" class="btn btn-link nav-link" style="border: none; background: none;">Logout</button>
+        </form>
+      </li>
+    </ul>
+  </div>
+</nav>

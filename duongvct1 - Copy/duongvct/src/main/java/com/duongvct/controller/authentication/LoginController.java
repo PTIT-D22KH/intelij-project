@@ -1,4 +1,4 @@
-package com.duongvct.controller;
+package com.duongvct.controller.authentication;
 
 import com.duongvct.constants.RoleConstant;
 import com.duongvct.entity.Account;
@@ -34,30 +34,8 @@ public class LoginController {
             model.addAttribute("message", "Invalid username or password.");
         }
 
-        return "login";
+        return "authentication/login";
     }
-//    @PostMapping("/login")
-//    public String login(Account account
-//            , @RequestParam(value = "guest", required = false) String guest) {
-//        if (guest != null && guest.equals("true")){
-//
-//            Account newGuest = accountService.findByUsername("guest");
-//            if (newGuest == null){
-//                Account newAccountGuest = new Account();
-//                newAccountGuest.setUsername("guest");
-//                newAccountGuest.setPassword("guest");
-//                newAccountGuest.setRoles(RoleConstant.ROLE_GUEST);
-//                newAccountGuest.setFullname("Guest");
-//                registerService.registerAccount(newAccountGuest);
-//                return "redirect:/dashboard";
-//            } else {
-//                account = newGuest;
-//            }
-//
-//        }
-//        accountService.loadUserByUsername(account.getUsername());
-//        return "redirect:/dashboard";
-
 
 
 }

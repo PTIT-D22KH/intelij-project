@@ -6,7 +6,9 @@ import lombok.Data;
 public enum RoleConstant {
     ROLE_ADMIN("ROLE_ADMIN", "admin"),
     ROLE_USER("ROLE_USER", "user"),
-    ROLE_GUEST("ROLE_GUEST", "guest");
+    ROLE_EMPLOYEE("ROLE_EMPLOYEE", "employee"),
+//    ROLE_GUEST("ROLE_GUEST", "guest")
+    ;
     private String id, name;
 
 

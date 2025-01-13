@@ -4,6 +4,8 @@ import com.duongvct.constants.RoleConstant;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 @Entity
 public class Account {
@@ -24,26 +26,31 @@ public class Account {
     @Column(nullable = false)
     private String email;
 
-    @Column()
-    private String photo;
+    @Column(nullable = false)
+    private String address;
+    @Column
+    private Date dob;
 
     @Column(nullable = false)
     private boolean activated;
+
+    @Column
+    private int salary;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 50) // Ensure the length matches the database schema
     private RoleConstant roles;
 
-//    public Account(String username, String password, String fullname, RoleConstant roles) {
-//        this.username = username;
-//        this.password = password;
-//        this.fullname = fullname;
-//        this.roles = roles;
-//    }
-//
-//    public Account(){
-//
-//    }
+    @Column(nullable = false)
+    private boolean firstLogin = true;
+
+    public boolean isFirstLogin() {
+        return firstLogin;
+    }
+
+    public void setFirstLogin(boolean firstLogin) {
+        this.firstLogin = firstLogin;
+    }
 
     public Long getId() {
         return id;
@@ -85,14 +92,6 @@ public class Account {
         this.email = email;
     }
 
-    public String getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo = photo;
-    }
-
     public boolean isActivated() {
         return activated;
     }
@@ -107,5 +106,45 @@ public class Account {
 
     public void setRoles(RoleConstant roles) {
         this.roles = roles;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Date getDob() {
+        return dob;
+    }
+
+    public int getSalary() {
+        return salary;
+    }
+
+    public void setSalary(int salary) {
+        this.salary = salary;
+    }
+
+    public void setDob(Date dob) {
+        this.dob = dob;
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", fullname='" + fullname + '\'' +
+                ", email='" + email + '\'' +
+                ", address='" + address + '\'' +
+                ", dob=" + dob +
+                ", activated=" + activated +
+                ", salary=" + salary +
+                ", roles=" + roles +
+                '}';
     }
 }
