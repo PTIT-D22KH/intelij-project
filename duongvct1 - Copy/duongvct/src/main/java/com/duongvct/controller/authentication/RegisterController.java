@@ -1,6 +1,6 @@
 package com.duongvct.controller.authentication;
 
-import com.duongvct.constants.RoleConstant;
+import com.duongvct.utils.Role;
 import com.duongvct.entity.Account;
 import com.duongvct.service.impl.AccountServiceImpl;
 import com.duongvct.service.impl.RegisterServiceImpl;
@@ -58,9 +58,9 @@ public class RegisterController {
 
         account.setDob(dob);
         if (account.getUsername().equals("admin")) {
-            account.setRoles(RoleConstant.ROLE_ADMIN);
+            account.setRoles(Role.ROLE_ADMIN);
         } else {
-            account.setRoles(RoleConstant.ROLE_USER);
+            account.setRoles(Role.ROLE_USER);
         }
         account.setActivated(true);
 

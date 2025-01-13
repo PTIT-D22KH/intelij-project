@@ -1,6 +1,6 @@
 package com.duongvct.config;
 
-import com.duongvct.constants.RoleConstant;
+import com.duongvct.utils.Role;
 import com.duongvct.service.impl.AccountServiceImpl;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,7 +17,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.ui.Model;
 
 import java.io.IOException;
 import java.util.Set;
@@ -34,9 +33,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/register/**", "/login/**", "/css/**").permitAll()
                         .requestMatchers("/dashboard").hasAnyAuthority(
-                                RoleConstant.ROLE_ADMIN.getId(),
-                                RoleConstant.ROLE_USER.getId(),
-                                RoleConstant.ROLE_EMPLOYEE.getId()
+                                Role.ROLE_ADMIN.getId(),
+                                Role.ROLE_USER.getId(),
+                                Role.ROLE_EMPLOYEE.getId()
                         )
 //                        .requestMatchers("/dashboard").authenticated()
                         .anyRequest().authenticated()
@@ -69,7 +68,7 @@ public class SecurityConfig {
             @Override
             public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
                 Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
-                if (roles.contains(RoleConstant.ROLE_EMPLOYEE.getId())) {
+                if (roles.contains(Role.ROLE_EMPLOYEE.getId())) {
                     if (accountService.findByUsername(authentication.getName()).isFirstLogin() == true) {
                         response.sendRedirect("/change-password");
 
@@ -77,7 +76,7 @@ public class SecurityConfig {
                         response.sendRedirect("/admin/dashboard");
                     }
                 }
-                else if (roles.contains(RoleConstant.ROLE_ADMIN.getId())) {
+                else if (roles.contains(Role.ROLE_ADMIN.getId())) {
                     response.sendRedirect("/admin/dashboard");
                 } else {
                     response.sendRedirect("/dashboard");

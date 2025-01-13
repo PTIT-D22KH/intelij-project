@@ -1,18 +1,13 @@
-package com.duongvct.constants;
+package com.duongvct.utils;
 
-import lombok.Data;
+public enum OrderStatus {
+    UNPAID("unpaid", "Chưa thanh toán"),
+    PAID("paid", "Đã thanh toán"),
+    CANCEL("cancel", "Đã hủy");
 
-
-public enum RoleConstant {
-    ROLE_ADMIN("ROLE_ADMIN", "admin"),
-    ROLE_USER("ROLE_USER", "user"),
-    ROLE_EMPLOYEE("ROLE_EMPLOYEE", "employee"),
-//    ROLE_GUEST("ROLE_GUEST", "guest")
-    ;
     private String id, name;
 
-
-    RoleConstant(String id, String name) {
+    OrderStatus(String id, String name) {
         this.id = id;
         this.name = name;
     }

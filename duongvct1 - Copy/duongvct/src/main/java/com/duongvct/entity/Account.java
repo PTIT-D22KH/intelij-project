@@ -1,6 +1,6 @@
 package com.duongvct.entity;
 
-import com.duongvct.constants.RoleConstant;
+import com.duongvct.utils.Role;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -39,7 +39,7 @@ public class Account {
 
     @Enumerated(EnumType.STRING)
     @Column(length = 50) // Ensure the length matches the database schema
-    private RoleConstant roles;
+    private Role roles;
 
     @Column(nullable = false)
     private boolean firstLogin = true;
@@ -100,11 +100,11 @@ public class Account {
         this.activated = activated;
     }
 
-    public RoleConstant getRoles() {
+    public Role getRoles() {
         return roles;
     }
 
-    public void setRoles(RoleConstant roles) {
+    public void setRoles(Role roles) {
         this.roles = roles;
     }
 

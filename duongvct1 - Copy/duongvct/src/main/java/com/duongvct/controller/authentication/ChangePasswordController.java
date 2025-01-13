@@ -1,6 +1,6 @@
 package com.duongvct.controller.authentication;
 
-import com.duongvct.constants.RoleConstant;
+import com.duongvct.utils.Role;
 import com.duongvct.entity.Account;
 import com.duongvct.service.impl.AccountServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class ChangePasswordController {
     @GetMapping("/change-password")
     public String getChangePassword(Model model, @AuthenticationPrincipal User user) {
         Account account = accountService.findByUsername(user.getUsername());
-        if (account.getRoles() == RoleConstant.ROLE_EMPLOYEE && account.isFirstLogin() ) {
+        if (account.getRoles() == Role.ROLE_EMPLOYEE && account.isFirstLogin() ) {
             model.addAttribute("message", "Please change your password. You are currently using the default password.");
         }
         return "authentication/change-password";

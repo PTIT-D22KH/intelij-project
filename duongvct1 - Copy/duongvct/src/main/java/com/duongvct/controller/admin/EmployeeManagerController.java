@@ -1,6 +1,6 @@
 package com.duongvct.controller.admin;
 
-import com.duongvct.constants.RoleConstant;
+import com.duongvct.utils.Role;
 import com.duongvct.entity.Account;
 import com.duongvct.service.impl.AccountServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,7 +92,7 @@ public class EmployeeManagerController {
             return "admin/employee/add-employee";
         }
         account.setDob(dob);
-        account.setRoles(RoleConstant.ROLE_EMPLOYEE);
+        account.setRoles(Role.ROLE_EMPLOYEE);
         account.setActivated(true);
         account.setFirstLogin(true);
         account.setPassword(passwordEncoder.encode(account.getPassword()));
