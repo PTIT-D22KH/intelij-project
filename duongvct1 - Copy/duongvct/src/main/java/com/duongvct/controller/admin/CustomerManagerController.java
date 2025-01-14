@@ -2,6 +2,8 @@ package com.duongvct.controller.admin;
 
 import com.duongvct.entity.Account;
 import com.duongvct.service.impl.AccountServiceImpl;
+import com.duongvct.service.impl.RegisterServiceImpl;
+import com.duongvct.utils.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -20,6 +22,10 @@ import java.util.List;
 public class CustomerManagerController {
     @Autowired
     private AccountServiceImpl accountService;
+
+    @Autowired
+    private RegisterServiceImpl registerService;
+
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -41,6 +47,25 @@ public class CustomerManagerController {
         return "admin/customer/customer-management";
     }
 
+    @GetMapping("/add")
+    public String addCustomer(Model model) {
+        model.addAttribute("account", new Account());
+        return "admin/customer/add-customer";
+    }
+
+    @PostMapping("/add")
+    public String addCustomer(@ModelAttribute Account account, @RequestParam("dob") @DateTimeFormat(pattern = "yyyy-MM-dd") Date dob, Model model) {
+        if (accountService.findByUsername(account.getUsername()) != null) {
+            model.addAttribute("account", account);
+            model.addAttribute("message", "Username is already taken.");
+            return "admin/customer/add-customer";
+        }
+        account.setDob(dob);
+        account.setRoles(Role.ROLE_USER);
+        registerService.registerAccount(account);
+        return "redirect:/admin/customer";
+    }
+
     @GetMapping("/edit/{id}")
     public String editCustomer(@PathVariable Long id, Model model) {
         Account account = accountService.findById(id);
@@ -59,6 +84,20 @@ public class CustomerManagerController {
             existingAccount.setSalary(account.getSalary());
         }
         accountService.save(existingAccount);
+        return "redirect:/admin/customer";
+    }
+
+    @PostMapping("/delete")
+    public String deleteSelected(@RequestParam("selectedIds") List<Long> selectedIds) {
+        for (Long id : selectedIds) {
+            accountService.deleteById(id);
+        }
+        return "redirect:/admin/customer";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteCustomer(@PathVariable Long id) {
+        accountService.deleteById(id);
         return "redirect:/admin/customer";
     }
 }

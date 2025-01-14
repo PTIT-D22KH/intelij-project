@@ -29,12 +29,23 @@
           <input type="text" id="address" th:field="*{address}" class="form-control" required>
         </div>
         <div class="form-group">
+          <label for="phoneNumber">Phone Number:</label>
+          <input type="text" id="phoneNumber" th:field="*{phoneNumber}" class="form-control" required>
+        </div>
+        <div class="form-group">
           <label for="dob">Date of Birth:</label>
           <input type="date" id="dob" th:field="*{dob}" class="form-control" required>
         </div>
         <div class="form-group">
           <label for="salary">Salary:</label>
           <input type="number" id="salary" th:field="*{salary}" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="activated">Status:</label>
+          <select id="activated" th:field="*{activated}" class="form-control">
+            <option value="true" th:selected="${account.activated}">Active</option>
+            <option value="false" th:selected="${!account.activated}">Inactive</option>
+          </select>
         </div>
         <div class="form-group text-center">
           <button type="submit" class="btn btn-primary btn-block">Update Employee</button>

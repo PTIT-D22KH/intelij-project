@@ -22,6 +22,8 @@ public class RegisterServiceImpl implements RegisterService {
     public void registerAccount(Account account) {
         account.setPassword(passwordEncoder.encode(account.getPassword()));
         log.info("Encoded password during registration: {}", account.getPassword());
+        account.setActivated(true);
+        account.setFirstLogin(true);
         accountRepository.save(account);
     }
 }

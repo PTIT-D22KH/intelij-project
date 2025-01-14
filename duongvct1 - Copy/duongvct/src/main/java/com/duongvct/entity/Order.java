@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
-@jakarta.persistence.Table(name = "`order`") // Escape the table name with backticks
+@jakarta.persistence.Table(name = "orders")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

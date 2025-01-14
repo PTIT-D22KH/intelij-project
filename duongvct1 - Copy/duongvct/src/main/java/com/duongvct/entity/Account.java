@@ -2,6 +2,7 @@ package com.duongvct.entity;
 
 import com.duongvct.utils.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.util.Date;
@@ -28,6 +29,10 @@ public class Account {
 
     @Column(nullable = false)
     private String address;
+
+    @Column
+    @Size(min = 10, max = 10, message = "Phone number must be 10 digits")
+    private String phoneNumber;
     @Column
     private Date dob;
 
@@ -43,6 +48,14 @@ public class Account {
 
     @Column(nullable = false)
     private boolean firstLogin = true;
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
     public boolean isFirstLogin() {
         return firstLogin;

@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/header :: head(title='Edit Customer')}">
+<head th:replace="~{fragments/header :: head(title='Add Customer')}">
   <link rel="stylesheet" href="/css/edit-customer.css">
 </head>
 <body>
-<nav th:replace="fragments/header :: body"></nav>
+<nav th:replace="~{fragments/header :: body}"></nav>
 <div class="container mt-5">
   <div class="row">
     <div class="col-md-6 offset-md-3">
-      <h2 class="text-center">Edit Customer</h2>
-      <form th:action="@{/admin/customer/edit/{id}(id=${account.id})}" th:object="${account}" method="post">
-        <input th:field="*{id}" type="hidden"/>
-        <input th:field="*{password}" type="hidden"/>
+      <h2 class="text-center">Add Customer</h2>
+      <form th:action="@{/admin/customer/add}" th:object="${account}" method="post">
         <div class="form-group">
           <label for="username">Username:</label>
-          <input type="text" id="username" th:field="*{username}" class="form-control" readonly>
+          <input type="text" id="username" th:field="*{username}" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input type="password" id="password" th:field="*{password}" class="form-control" required>
         </div>
         <div class="form-group">
           <label for="fullname">Full Name:</label>
@@ -36,12 +38,11 @@
           <label for="dob">Date of Birth:</label>
           <input type="date" id="dob" th:field="*{dob}" class="form-control" required>
         </div>
-        <div class="form-group" th:if="${account.roles.id == 'ROLE_ADMIN' or account.roles.id == 'ROLE_EMPLOYEE'}">
-          <label for="salary">Salary:</label>
-          <input type="number" id="salary" th:field="*{salary}" class="form-control">
-        </div>
         <div class="form-group text-center">
-          <button type="submit" class="btn btn-primary btn-block">Update Customer</button>
+          <button type="submit" class="btn btn-primary btn-block">Add Customer</button>
+        </div>
+        <div th:if="${message}" class="alert alert-warning" role="alert">
+          <p th:text="${message}"></p>
         </div>
       </form>
     </div>

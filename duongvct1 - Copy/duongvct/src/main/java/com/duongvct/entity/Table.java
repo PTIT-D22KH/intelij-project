@@ -4,6 +4,7 @@ import com.duongvct.utils.TableStatus;
 import jakarta.persistence.*;
 
 @Entity
+@jakarta.persistence.Table(name = "tables")
 public class Table {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -20,8 +20,10 @@
         <th>Full Name</th>
         <th>Email</th>
         <th>Address</th>
+        <th>Phone Number</th>
         <th>Date of Birth</th>
         <th>Salary</th>
+        <th>Status</th>
         <th>Action</th>
       </tr>
       </thead>
@@ -33,10 +35,14 @@
         <td th:text="${account.fullname}"></td>
         <td th:text="${account.email}"></td>
         <td th:text="${account.address}"></td>
+        <td th:text="${account.phoneNumber}"></td>
         <td th:text="${#dates.format(account.dob, 'yyyy-MM-dd')}"></td>
         <td th:text="${account.salary}"></td>
+        <td th:text="${account.activated ? 'Active' : 'Inactive'}"></td>
         <td class="action-buttons">
           <a th:href="@{/admin/employee/edit/{id}(id=${account.id})}" class="btn btn-warning btn-sm">Edit</a>
+          <a th:href="@{/admin/employee/delete/{id}(id=${account.id})}" class="btn btn-danger btn-sm">Delete</a>
+          <a th:href="@{/admin/employee/deactivate/{id}(id=${account.id})}" class="btn btn-secondary btn-sm" th:text="${account.activated ? 'Deactivate' : 'Activate'}"></a>
         </td>
       </tr>
       </tbody>

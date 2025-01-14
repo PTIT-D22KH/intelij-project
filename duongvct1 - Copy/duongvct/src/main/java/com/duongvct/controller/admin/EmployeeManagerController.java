@@ -1,5 +1,6 @@
 package com.duongvct.controller.admin;
 
+import com.duongvct.service.impl.RegisterServiceImpl;
 import com.duongvct.utils.Role;
 import com.duongvct.entity.Account;
 import com.duongvct.service.impl.AccountServiceImpl;
@@ -24,7 +25,8 @@ public class EmployeeManagerController {
     private AccountServiceImpl accountService;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private RegisterServiceImpl registerService;
+
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -73,7 +75,7 @@ public class EmployeeManagerController {
         return "redirect:/admin/employee";
     }
 
-    @PostMapping("/delete/{id}")
+    @GetMapping("/delete/{id}")
     public String deleteEmployee(@PathVariable Long id) {
         accountService.deleteById(id);
         return "redirect:/admin/employee";
@@ -93,9 +95,14 @@ public class EmployeeManagerController {
         }
         account.setDob(dob);
         account.setRoles(Role.ROLE_EMPLOYEE);
-        account.setActivated(true);
-        account.setFirstLogin(true);
-        account.setPassword(passwordEncoder.encode(account.getPassword()));
+        registerService.registerAccount(account);
+        return "redirect:/admin/employee";
+    }
+
+    @GetMapping("/deactivate/{id}")
+    public String deactivateEmployee(@PathVariable Long id) {
+        Account account = accountService.findById(id);
+        account.setActivated(!account.isActivated());
         accountService.save(account);
         return "redirect:/admin/employee";
     }
