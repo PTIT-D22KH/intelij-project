@@ -38,16 +38,20 @@ public class Order {
     private Timestamp payDate;
 
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "table_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "table_id")
     private Table table;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "customer_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
     private Account customer;
 
     @OneToMany(mappedBy = "order")
     private List<OrderItem> orderItems;
+
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Shipment shipment;
+
     public Long getId() {
         return id;
     }
@@ -126,5 +130,38 @@ public class Order {
 
     public void setCustomer(Account customer) {
         this.customer = customer;
+    }
+
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
+    }
+
+    public Shipment getShipment() {
+        return shipment;
+    }
+
+    public void setShipment(Shipment shipment) {
+        this.shipment = shipment;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", paidAmount=" + paidAmount +
+                ", totalAmount=" + totalAmount +
+                ", discount=" + discount +
+                ", orderStatus=" + orderStatus +
+                ", orderType=" + orderType +
+                ", orderDate=" + orderDate +
+                ", payDate=" + payDate +
+                ", table=" + table +
+                ", customer=" + customer +
+                ", orderItems=" + orderItems +
+                '}';
     }
 }

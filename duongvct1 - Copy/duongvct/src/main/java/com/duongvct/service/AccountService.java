@@ -1,6 +1,7 @@
 package com.duongvct.service;
 
 import com.duongvct.entity.Account;
+import com.duongvct.utils.Role;
 
 import java.util.List;
 
@@ -15,4 +16,8 @@ public interface AccountService {
 
 
     public Account findById(Long id);
+
+    public List<Account> findAllUsers();
+
+    public List<Account> findByRole(Role role);
 }

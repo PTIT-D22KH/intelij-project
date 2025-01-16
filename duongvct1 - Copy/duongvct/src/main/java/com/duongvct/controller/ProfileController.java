@@ -39,7 +39,7 @@ public class ProfileController {
                                 @RequestParam("dob") @DateTimeFormat(pattern = "yyyy-MM-dd") Date dob,
                                 Model model) {
         Account currentAccount = accountService.findByUsername(user.getUsername());
-
+        currentAccount.setPhoneNumber(account.getPhoneNumber());
         currentAccount.setFullname(account.getFullname());
         currentAccount.setEmail(account.getEmail());
         currentAccount.setAddress(account.getAddress());

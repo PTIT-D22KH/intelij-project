@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 @Entity
 public class Shipment {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Enumerated(EnumType.STRING)
@@ -22,7 +23,6 @@ public class Shipment {
 
 
     @OneToOne
-    @MapsId
     @JoinColumn(name = "order_id")
     private Order order;
 
@@ -30,7 +30,7 @@ public class Shipment {
     @JoinColumn(name = "customer_id")
     private Account customer;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "shipper_id")
     private Account shipper;
 
@@ -91,5 +91,13 @@ public class Shipment {
 
     public void setShipCost(int shipCost) {
         this.shipCost = shipCost;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

@@ -1,0 +1,28 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.container {
+    margin-top: 50px;
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.btn-block {
+    width: 100%;
+}
+
+.table-container {
+    margin-top: 20px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 5px;
+}

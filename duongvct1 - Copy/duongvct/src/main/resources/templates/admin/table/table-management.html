@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head(title='Table Management')}">
+  <link rel="stylesheet" href="/css/table-management.css">
+</head>
+<body>
+<nav th:replace="~{fragments/header :: body}"></nav>
+<div class="container table-container">
+  <h2 class="text-center">Table Management</h2>
+  <div class="form-group text-center">
+    <a href="/admin/table/add" class="btn btn-success">Add Table</a>
+  </div>
+  <form th:action="@{/admin/table/delete}" method="post">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th><input type="checkbox" id="selectAll"></th>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="table : ${tables}">
+        <td><input type="checkbox" name="selectedIds" th:value="${table.id}"></td>
+        <td th:text="${table.id}"></td>
+        <td th:text="${table.name}"></td>
+        <td th:text="${table.tableStatus.name}"></td>
+        <td class="action-buttons">
+          <a th:href="@{/admin/table/edit/{id}(id=${table.id})}" class="btn btn-warning btn-sm">Edit</a>
+          <a th:href="@{/admin/table/delete/{id}(id=${table.id})}" class="btn btn-danger btn-sm">Delete</a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="form-group text-center">
+      <button type="submit" class="btn btn-danger">Delete Selected</button>
+    </div>
+  </form>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="/js/table-management.js"></script>
+</body>
+</html>

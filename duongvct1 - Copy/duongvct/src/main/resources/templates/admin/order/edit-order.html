@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head(title='Edit Order')}">
+  <link rel="stylesheet" href="/css/edit-order.css">
+</head>
+<body>
+<nav th:replace="fragments/header :: body"></nav>
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-6 offset-md-3">
+      <h2 class="text-center">Edit Order</h2>
+      <form th:action="@{/admin/order/edit/{id}(id=${order.id})}" th:object="${order}" method="post">
+        <input th:field="*{id}" type="hidden"/>
+        <div class="form-group">
+          <label for="customer">Customer:</label>
+          <select id="customer" th:field="*{customer}" class="form-control" required>
+            <option th:each="customer : ${customers}" th:value="${customer.id}" th:text="${customer.id + '-' + customer.fullname + '-' + customer.phoneNumber + '-' + customer.address}"></option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="table">Table:</label>
+          <select id="table" th:field="*{table}" class="form-control" required>
+            <option th:each="table : ${tables}" th:value="${table.id}" th:text="${table.name}"></option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="orderType">Order Type:</label>
+          <select id="orderType" th:field="*{orderType}" class="form-control" required>
+            <option th:each="type : ${orderTypes}" th:value="${type}" th:text="${type.name}"></option>
+          </select>
+        </div>
+        <div class="form-group text-center">
+          <button type="submit" class="btn btn-primary btn-block">Update Order</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

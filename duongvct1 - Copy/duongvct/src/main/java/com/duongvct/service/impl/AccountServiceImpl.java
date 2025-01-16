@@ -1,8 +1,10 @@
 package com.duongvct.service.impl;
 
 import com.duongvct.entity.Account;
+import com.duongvct.exception.InactiveAccountException;
 import com.duongvct.repository.AccountRepository;
 import com.duongvct.service.AccountService;
+import com.duongvct.utils.Role;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,6 +29,9 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Account account =  accountRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        if (!account.isActivated()) {
+            throw new InactiveAccountException("Account is not activated. Please contact admin");
+        }
         log.info("Encoded password: {}", account.getPassword());
         return new User(account.getUsername(), account.getPassword(), AuthorityUtils.commaSeparatedStringToAuthorityList(account.getRoles().getId()));
 
@@ -55,5 +61,23 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
     @Override
     public Account findById(Long id) {
         return accountRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<Account> findAllUsers() {
+        List<Account> a = accountRepository.findAll();
+        List<Account> accounts = new ArrayList<>();
+
+        for (Account account : a) {
+            if (account.getRoles() == Role.ROLE_USER) {
+                accounts.add(account);
+            }
+        }
+        return accounts;
+    }
+
+    @Override
+    public List<Account> findByRole(Role role) {
+        return accountRepository.findByRoles(role);
     }
 }

@@ -19,4 +19,9 @@ public class DashboardController {
         model.addAttribute("account", account);
         return "dashboard";
     }
+
+    @GetMapping("/admin/dashboard")
+    public String getAdminDashboard() {
+        return "admin/admin-dashboard";
+    }
 }

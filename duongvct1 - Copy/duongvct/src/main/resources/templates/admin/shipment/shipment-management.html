@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head(title='Shipment Management')}">
+    <link rel="stylesheet" href="/css/shipment-management.css">
+</head>
+<body>
+<nav th:replace="~{fragments/header :: body}"></nav>
+<div class="container table-container">
+    <h2 class="text-center">Shipment Management</h2>
+    <form th:action="@{/admin/shipment/delete}" method="post">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th><input type="checkbox" id="selectAll"></th>
+                <th>ID</th>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Shipper</th>
+                <th>Shipment Status</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Ship Cost</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="shipment : ${shipments}">
+                <td><input type="checkbox" name="selectedIds" th:value="${shipment.id}"></td>
+                <td th:text="${shipment.id}"></td>
+                <td th:text="${shipment.order.id}"></td>
+                <td th:text="${shipment.customer.id + '-' + shipment.customer.fullname +  '-' +  shipment.customer.phoneNumber +  '-' +  shipment.customer.address}"></td>
+                <td th:text="${shipment.shipper != null ? shipment.shipper.id + '-' + shipment.shipper.fullname + '-' + shipment.shipper.phoneNumber + '-' + shipment.shipper.address : ''}"></td>
+                <td th:text="${shipment.shipmentStatus.name}"></td>
+                <td th:text="${shipment.startDate != null ? #dates.format(shipment.startDate, 'yyyy-MM-dd HH:mm:ss') : ''}"></td>
+                <td th:text="${shipment.endDate != null ? #dates.format(shipment.endDate, 'yyyy-MM-dd HH:mm:ss') : ''}"></td>
+                <td th:text="${shipment.shipCost != null ? shipment.shipCost : 0}"></td>
+                <td class="action-buttons">
+                    <a th:href="@{/admin/shipment/edit/{id}(id=${shipment.id})}" class="btn btn-warning btn-sm">Edit</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="form-group text-center">
+            <button type="submit" class="btn btn-danger">Delete Selected</button>
+        </div>
+    </form>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="/js/shipment-management.js"></script>
+</body>
+</html>

@@ -2,6 +2,8 @@ package com.duongvct.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 public class OrderItem {
     @Id
@@ -12,17 +14,16 @@ public class OrderItem {
     private Long quantity;
 
 
-    @OneToOne()
+    @ManyToOne
     @JoinColumn(name = "food_item_id")
     private FoodItem foodItem;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "topping_id")
     private FoodItem toppingItem;
 
 
     @ManyToOne
-    @JoinColumn(name = "order_id")
     private Order order;
 
     public Long getId() {
@@ -63,5 +64,20 @@ public class OrderItem {
 
     public void setOrder(Order order) {
         this.order = order;
+    }
+
+    public Long getTotalPrice() {
+        return (foodItem.getPrice() + toppingItem.getPrice()) * quantity;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderItem{" +
+                "id=" + id +
+                ", quantity=" + quantity +
+                ", foodItem=" + foodItem +
+                ", toppingItem=" + toppingItem +
+                ", order=" + order +
+                '}';
     }
 }

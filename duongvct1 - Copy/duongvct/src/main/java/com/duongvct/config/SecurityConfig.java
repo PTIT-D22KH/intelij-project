@@ -1,5 +1,7 @@
 package com.duongvct.config;
 
+import com.duongvct.entity.Account;
+import com.duongvct.exception.InactiveAccountException;
 import com.duongvct.utils.Role;
 import com.duongvct.service.impl.AccountServiceImpl;
 import jakarta.servlet.ServletException;
@@ -12,10 +14,12 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import java.io.IOException;
@@ -44,7 +48,8 @@ public class SecurityConfig {
                         .loginPage("/login")
 //                        .defaultSuccessUrl("/dashboard", true)
                         .successHandler(customAuthenticationSuccessHandler())
-                        .failureUrl("/login?error=true")
+//                        .failureUrl("/login?error=true")
+                                .failureHandler(customerAuthenticationFailureHandler())
                         .permitAll()
                 )
                 .logout(logoutConfigurer -> logoutConfigurer
@@ -81,6 +86,23 @@ public class SecurityConfig {
                 } else {
                     response.sendRedirect("/dashboard");
                 }
+            }
+        };
+    }
+
+    @Bean
+    public AuthenticationFailureHandler customerAuthenticationFailureHandler(){
+        return new AuthenticationFailureHandler() {
+            @Override
+            public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+                Account account = accountService.findByUsername(request.getParameter("username"));
+                System.out.println(account);
+                if (account != null && !account.isActivated()) {
+                    response.sendRedirect("/login?error=inactivated");
+                } else {
+                    response.sendRedirect("/login?error=true");
+                }
+
             }
         };
     }

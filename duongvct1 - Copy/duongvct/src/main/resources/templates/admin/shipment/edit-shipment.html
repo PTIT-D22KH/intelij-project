@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head(title='Edit Shipment')}">
+  <link rel="stylesheet" href="/css/edit-shipment.css">
+</head>
+<body>
+<nav th:replace="~{fragments/header :: body}"></nav>
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-6 offset-md-3">
+      <h2 class="text-center">Edit Shipment</h2>
+      <form th:action="@{/admin/shipment/edit/{id}(id=${shipment.id})}" th:object="${shipment}" method="post">
+        <div class="form-group">
+          <label for="order">Order:</label>
+          <select id="order" th:field="*{order.id}" class="form-control" required>
+            <option th:each="order : ${orders}" th:value="${order.id}" th:text="${order.id}"></option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="customer">Customer:</label>
+          <select id="customer" th:field="*{customer.id}" class="form-control" required>
+            <option th:each="order : ${orders}" th:value="${order.customer.id}" th:text="${order.customer.id + '-' + order.customer.fullname +  '-' +  order.customer.phoneNumber +  '-' +  order.customer.address}"></option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="shipper">Shipper:</label>
+          <select id="shipper" th:field="*{shipper.id}" class="form-control" required>
+            <option th:each="shipper : ${shippers}" th:value="${shipper.id}" th:text="${shipper.id + '-' + shipper.fullname + '-' + shipper.phoneNumber + '-' + shipper.address}"></option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="shipmentStatus">Shipment Status:</label>
+          <select id="shipmentStatus" th:field="*{shipmentStatus}" class="form-control" required>
+            <option th:each="status : ${shipmentStatuses}" th:value="${status}" th:text="${status.name}"></option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="shipCost">Ship Cost:</label>
+          <input type="number" id="shipCost" th:field="*{shipCost}" class="form-control" min="0" required>
+        </div>
+        <div class="form-group text-center">
+          <button type="submit" class="btn btn-primary btn-block">Update Shipment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head(title='Choose Food Items')}">
+  <link rel="stylesheet" href="/css/edit-order.css">
+</head>
+<body>
+<nav th:replace="fragments/header :: body"></nav>
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-6 offset-md-3">
+      <h2 class="text-center">Choose Food Items for Order #<span th:text="${order.id}"></span></h2>
+      <form th:action="@{/admin/order/edit/{id}(id=${order.id})}" th:object="${order}" method="post">
+        <input th:field="*{id}" type="hidden"/>
+        <input th:field="*{customer}" type="hidden"/>
+        <input th:field="*{table}" type="hidden"/>
+        <div class="form-group">
+          <label for="foodCategory">Food Category:</label>
+          <select id="foodCategory" class="form-control" required>
+            <option th:each="category : ${foodCategories}" th:value="${category.id}" th:text="${category.name}"></option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="foodItem">Food Item:</label>
+          <select id="foodItem" class="form-control" required>
+            <!-- Food items will be populated dynamically based on the selected category -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="toppingCategory">Topping Category:</label>
+          <select id="toppingCategory" class="form-control" required>
+            <option th:each="category : ${foodCategories}" th:value="${category.id}" th:text="${category.name}"></option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="toppingItem">Topping Item:</label>
+          <select id="toppingItem" class="form-control" required>
+            <!-- Topping items will be populated dynamically based on the selected category -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="quantity">Quantity:</label>
+          <input type="number" id="quantity" class="form-control" min="1" value="1" required>
+        </div>
+        <div class="form-group text-center">
+          <button type="button" id="addFoodItem" class="btn btn-primary btn-block">Add Food Item</button>
+        </div>
+        <div class="form-group">
+          <ul id="selectedFoodItems" class="list-group">
+            <!-- Selected food items will be displayed here -->
+          </ul>
+        </div>
+        <div class="form-group text-center">
+          <button type="submit" class="btn btn-primary btn-block">Update Order</button>
+        </div>
+      </form>
+      <h3 class="text-center">Order Items</h3>
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>Food Item</th>
+          <th>Topping Item</th>
+          <th>Quantity</th>
+          <th>Price</th>
+          <th>Total</th>
+        </tr>
+        </thead>
+        <tbody id="orderItemsTable">
+        <!-- Existing order items will be populated dynamically -->
+        <tr th:each="item : ${orderItems}">
+          <td th:text="${item.foodItem.name}"></td>
+          <td th:text="${item.toppingItem.name}"></td>
+          <td th:text="${item.quantity}"></td>
+          <td th:text="${item.foodItem.price + item.toppingItem.price}"></td>
+          <td th:text="${item.quantity * (item.foodItem.price + item.toppingItem.price)}"></td>
+        </tr>
+        </tbody>
+      </table>
+      <h4 class="text-center">Total Amount: <span id="totalAmount" th:text="${order.totalAmount}">0</span></h4>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('#foodCategory').change(function() {
+      var categoryId = $(this).val();
+      var orderId = /*[[${order.id}]]*/ 0; // Use Thymeleaf to inject the order ID
+      $.ajax({
+        url: '/admin/order/' + orderId + '/food-items/' + categoryId,
+        method: 'GET',
+        success: function(data) {
+          var foodItemSelect = $('#foodItem');
+          foodItemSelect.empty();
+          $.each(data, function(index, item) {
+            foodItemSelect.append('<option value="' + item.id + '" data-price="' + item.price + '">' + item.name + '</option>');
+          });
+        }
+      });
+    });
+
+    $('#toppingCategory').change(function() {
+      var categoryId = $(this).val();
+      var orderId = /*[[${order.id}]]*/ 0; // Use Thymeleaf to inject the order ID
+      $.ajax({
+        url: '/admin/order/' + orderId + '/food-items/' + categoryId,
+        method: 'GET',
+        success: function(data) {
+          var toppingItemSelect = $('#toppingItem');
+          toppingItemSelect.empty();
+          $.each(data, function(index, item) {
+            toppingItemSelect.append('<option value="' + item.id + '" data-price="' + item.price + '">' + item.name + '</option>');
+          });
+        }
+      });
+    });
+
+    $('#addFoodItem').click(function() {
+      var foodItemId = $('#foodItem').val();
+      var foodItemName = $('#foodItem option:selected').text();
+      var toppingItemId = $('#toppingItem').val();
+      var toppingItemName = $('#toppingItem option:selected').text();
+      var quantity = $('#quantity').val();
+      var foodItemPrice = $('#foodItem option:selected').data('price');
+      var toppingItemPrice = $('#toppingItem option:selected').data('price');
+      var total = quantity * (foodItemPrice + toppingItemPrice);
+      var listItem = '<li class="list-group-item">' + foodItemName + ' with ' + toppingItemName + ' - Quantity: ' + quantity + '<input type="hidden" name="orderItems[0].foodItem.id" value="' + foodItemId + '"><input type="hidden" name="orderItems[0].toppingItem.id" value="' + toppingItemId + '"><input type="hidden" name="orderItems[0].quantity" value="' + quantity + '"></li>';
+      $('#selectedFoodItems').append(listItem);
+
+      var orderItemRow = '<tr><td>' + foodItemName + '</td><td>' + toppingItemName + '</td><td>' + quantity + '</td><td>' + (foodItemPrice + toppingItemPrice) + '</td><td>' + total + '</td></tr>';
+      $('#orderItemsTable').append(orderItemRow);
+
+      var currentTotal = parseFloat($('#totalAmount').text());
+      $('#totalAmount').text(currentTotal + total);
+    });
+  });
+</script>
+</body>
+</html>

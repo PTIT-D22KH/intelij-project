@@ -41,7 +41,7 @@ public class FoodCategory {
         return StringToSlug.convert(name);
     }
 
-    public void setSlug(String slug) {
-        this.slug = slug;
+    public void setSlug() {
+        this.slug = StringToSlug.convert(name);
     }
 }
