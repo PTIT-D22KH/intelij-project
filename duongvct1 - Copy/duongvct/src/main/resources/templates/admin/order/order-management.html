@@ -45,7 +45,7 @@
             <tr th:each="order : ${orders.getContent()}">
                 <td><input type="checkbox" name="selectedIds" th:value="${order.id}"></td>
                 <td th:text="${order.id}"></td>
-                <td th:text="${order.customer.fullname}"></td>
+                <td th:text="${order.customer.id + '-' + order.customer.fullname + '-' + order.customer.phoneNumber + '-' + order.customer.address}"></td>
                 <td th:text="${#dates.format(order.orderDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
                 <td th:text="${order.orderStatus.name}"></td>
                 <td th:text="${order.orderType.name}"></td>

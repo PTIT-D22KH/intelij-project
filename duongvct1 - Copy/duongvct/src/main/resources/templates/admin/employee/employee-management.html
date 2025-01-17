@@ -22,6 +22,7 @@
           <option value="address">Address</option>
           <option value="phoneNumber">Phone Number</option>
         </select>
+        <button class="btn btn-primary" type="button" onclick="searchEmployees()">Search</button>
       </div>
     </div>
   </div>
@@ -30,20 +31,20 @@
       <thead>
       <tr>
         <th><input type="checkbox" id="selectAll"></th>
-        <th>ID</th>
-        <th>Username</th>
-        <th>Full Name</th>
-        <th>Email</th>
-        <th>Address</th>
-        <th>Phone Number</th>
-        <th>Date of Birth</th>
-        <th>Salary</th>
+        <th><a th:href="@{/admin/employee(page=${currentPage}, size=${size}, sortField='id', sortDir=${reverseSortDir})}">ID</a></th>
+        <th><a th:href="@{/admin/employee(page=${currentPage}, size=${size}, sortField='username', sortDir=${reverseSortDir})}">Username</a></th>
+        <th><a th:href="@{/admin/employee(page=${currentPage}, size=${size}, sortField='fullname', sortDir=${reverseSortDir})}">Full Name</a></th>
+        <th><a th:href="@{/admin/employee(page=${currentPage}, size=${size}, sortField='email', sortDir=${reverseSortDir})}">Email</a></th>
+        <th><a th:href="@{/admin/employee(page=${currentPage}, size=${size}, sortField='address', sortDir=${reverseSortDir})}">Address</a></th>
+        <th><a th:href="@{/admin/employee(page=${currentPage}, size=${size}, sortField='phoneNumber', sortDir=${reverseSortDir})}">Phone Number</a></th>
+        <th><a th:href="@{/admin/employee(page=${currentPage}, size=${size}, sortField='dob', sortDir=${reverseSortDir})}">Date of Birth</a></th>
+        <th><a th:href="@{/admin/employee(page=${currentPage}, size=${size}, sortField='salary', sortDir=${reverseSortDir})}">Salary</a></th>
         <th>Status</th>
         <th>Action</th>
       </tr>
       </thead>
       <tbody>
-      <tr th:each="account : ${accounts}">
+      <tr th:each="account : ${accounts.getContent()}">
         <td><input type="checkbox" name="selectedIds" th:value="${account.id}"></td>
         <td th:text="${account.id}"></td>
         <td th:text="${account.username}"></td>
@@ -66,6 +67,19 @@
       <button type="submit" class="btn btn-danger">Delete Selected</button>
     </div>
   </form>
+  <div class="pagination">
+    <ul class="pagination">
+      <li th:classappend="${currentPage == 0} ? 'disabled'">
+        <a th:href="@{/admin/employee(page=${currentPage - 1}, size=${size}, sortField=${sortField}, sortDir=${sortDir})}">&laquo;</a>
+      </li>
+      <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${i == currentPage} ? 'active'">
+        <a th:href="@{/admin/employee(page=${i}, size=${size}, sortField=${sortField}, sortDir=${sortDir})}" th:text="${i + 1}">1</a>
+      </li>
+      <li th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+        <a th:href="@{/admin/employee(page=${currentPage + 1}, size=${size}, sortField=${sortField}, sortDir=${sortDir})}">&raquo;</a>
+      </li>
+    </ul>
+  </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>

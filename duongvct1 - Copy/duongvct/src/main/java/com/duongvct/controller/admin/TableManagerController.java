@@ -4,6 +4,10 @@ import com.duongvct.entity.Table;
 import com.duongvct.service.impl.TableServiceImpl;
 import com.duongvct.utils.TableStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,16 +21,41 @@ public class TableManagerController {
     @Autowired
     private TableServiceImpl tableService;
 
+//    @GetMapping("")
+//    public String showTables(@RequestParam(value = "searchColumn", required = false) String searchColumn,
+//                             @RequestParam(value = "searchValue", required = false) String searchValue,Model model) {
+//        List<Table> tables;
+//        if (searchColumn != null && searchValue != null) {
+//            tables = tableService.searchTables(searchColumn, searchValue);
+//        } else {
+//            tables = tableService.findAll();
+//        }
+//        model.addAttribute("tables", tables);
+//        return "admin/table/table-management";
+//    }
+
     @GetMapping("")
-    public String showTables(@RequestParam(value = "searchColumn", required = false) String searchColumn,
-                             @RequestParam(value = "searchValue", required = false) String searchValue,Model model) {
-        List<Table> tables;
+    public String showTables(@RequestParam(value = "page", defaultValue = "0") int page,
+                             @RequestParam(value = "size", defaultValue = "10") int size,
+                             @RequestParam(value = "sortField", defaultValue = "id") String sortField,
+                             @RequestParam(value = "sortDir", defaultValue = "asc") String sortDir,
+                             @RequestParam(value = "searchColumn", required = false) String searchColumn,
+                             @RequestParam(value = "searchValue", required = false) String searchValue,
+                             Model model) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDir), sortField));
+        Page<Table> tables;
         if (searchColumn != null && searchValue != null) {
-            tables = tableService.searchTables(searchColumn, searchValue);
+            tables = tableService.searchTables(searchColumn, searchValue, pageable);
         } else {
-            tables = tableService.findAll();
+            tables = tableService.findAll(pageable);
         }
         model.addAttribute("tables", tables);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", tables.getTotalPages());
+        model.addAttribute("totalItems", tables.getTotalElements());
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
         return "admin/table/table-management";
     }
 

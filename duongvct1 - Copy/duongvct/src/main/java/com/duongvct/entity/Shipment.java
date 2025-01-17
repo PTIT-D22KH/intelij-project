@@ -4,6 +4,7 @@ import com.duongvct.utils.ShipmentStatus;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 public class Shipment {
@@ -26,7 +27,7 @@ public class Shipment {
     @JoinColumn(name = "order_id")
     private Order order;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "customer_id")
     private Account customer;
 

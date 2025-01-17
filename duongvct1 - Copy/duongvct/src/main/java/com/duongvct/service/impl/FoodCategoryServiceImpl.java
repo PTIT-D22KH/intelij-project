@@ -4,6 +4,8 @@ import com.duongvct.entity.FoodCategory;
 import com.duongvct.repository.FoodCategoryRepository;
 import com.duongvct.service.FoodCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -51,6 +53,22 @@ public class FoodCategoryServiceImpl implements FoodCategoryService {
                 return foodCategoryRepository.findBySlugContaining(searchValue);
             default:
                 return foodCategoryRepository.findAll();
+        }
+    }
+    @Override
+    public Page<FoodCategory> findAll(Pageable pageable) {
+        return foodCategoryRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<FoodCategory> searchFoodCategories(String searchColumn, String searchValue, Pageable pageable) {
+        switch (searchColumn) {
+            case "name":
+                return foodCategoryRepository.findByNameContaining(searchValue, pageable);
+            case "slug":
+                return foodCategoryRepository.findBySlugContaining(searchValue, pageable);
+            default:
+                return foodCategoryRepository.findAll(pageable);
         }
     }
 }

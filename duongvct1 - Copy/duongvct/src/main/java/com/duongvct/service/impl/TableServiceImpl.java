@@ -5,6 +5,8 @@ import com.duongvct.repository.TableRepository;
 import com.duongvct.service.TableService;
 import com.duongvct.utils.TableStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -39,7 +41,7 @@ public class TableServiceImpl implements TableService {
 
     @Override
     public List<Table> findAllFreeTables() {
-        return tableRepository.findAllByTableStatus(TableStatus.FREE);
+        return tableRepository.findByTableStatus(TableStatus.FREE);
     }
 
     @Override
@@ -57,6 +59,27 @@ public class TableServiceImpl implements TableService {
                 return tableRepository.findByTableStatus(TableStatus.valueOf(searchValue.toUpperCase()));
             default:
                 return tableRepository.findAll();
+        }
+    }
+    @Override
+    public Page<Table> findAll(Pageable pageable) {
+        return tableRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Table> searchTables(String searchColumn, String searchValue, Pageable pageable) {
+        if (searchValue == null || searchValue.isEmpty()) {
+            return tableRepository.findAll(pageable);
+        }
+        switch (searchColumn) {
+            case "id":
+                return tableRepository.findById(Long.parseLong(searchValue), pageable);
+            case "name":
+                return tableRepository.findByNameContaining(searchValue, pageable);
+            case "status":
+                return tableRepository.findByTableStatus(TableStatus.valueOf(searchValue.toUpperCase()), pageable);
+            default:
+                return tableRepository.findAll(pageable);
         }
     }
 }

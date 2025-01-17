@@ -19,6 +19,7 @@
           <option value="name">Name</option>
           <option value="status">Status</option>
         </select>
+        <button class="btn btn-primary" type="button" onclick="searchTables()">Search</button>
       </div>
     </div>
   </div>
@@ -27,14 +28,14 @@
       <thead>
       <tr>
         <th><input type="checkbox" id="selectAll"></th>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Status</th>
+        <th><a th:href="@{/admin/table(page=${currentPage}, size=${size}, sortField='id', sortDir=${reverseSortDir})}">ID</a></th>
+        <th><a th:href="@{/admin/table(page=${currentPage}, size=${size}, sortField='name', sortDir=${reverseSortDir})}">Name</a></th>
+        <th><a th:href="@{/admin/table(page=${currentPage}, size=${size}, sortField='tableStatus', sortDir=${reverseSortDir})}">Status</a></th>
         <th>Action</th>
       </tr>
       </thead>
-      <tbody>
-      <tr th:each="table : ${tables}">
+      <tbody id="tableTableBody">
+      <tr th:each="table : ${tables.getContent()}">
         <td><input type="checkbox" name="selectedIds" th:value="${table.id}"></td>
         <td th:text="${table.id}"></td>
         <td th:text="${table.name}"></td>
@@ -50,6 +51,19 @@
       <button type="submit" class="btn btn-danger">Delete Selected</button>
     </div>
   </form>
+  <div class="pagination">
+    <ul class="pagination">
+      <li th:classappend="${currentPage == 0} ? 'disabled'">
+        <a th:href="@{/admin/table(page=${currentPage - 1}, size=${size}, sortField=${sortField}, sortDir=${sortDir})}">&laquo;</a>
+      </li>
+      <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${i == currentPage} ? 'active'">
+        <a th:href="@{/admin/table(page=${i}, size=${size}, sortField=${sortField}, sortDir=${sortDir})}" th:text="${i + 1}">1</a>
+      </li>
+      <li th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+        <a th:href="@{/admin/table(page=${currentPage + 1}, size=${size}, sortField=${sortField}, sortDir=${sortDir})}">&raquo;</a>
+      </li>
+    </ul>
+  </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>

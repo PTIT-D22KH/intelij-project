@@ -11,16 +11,20 @@
       <h2 class="text-center">Edit Shipment</h2>
       <form th:action="@{/admin/shipment/edit/{id}(id=${shipment.id})}" th:object="${shipment}" method="post">
         <div class="form-group">
-          <label for="order">Order:</label>
-          <select id="order" th:field="*{order.id}" class="form-control" required>
-            <option th:each="order : ${orders}" th:value="${order.id}" th:text="${order.id}"></option>
-          </select>
+<!--          <label for="order">Order:</label>-->
+<!--          <p id="order" th:text="${shipment.order.id}"></p>-->
+          <input type="hidden" th:field="*{order.id}">
         </div>
+<!--        <div class="form-group">-->
+<!--          <label for="customer">Customer:</label>-->
+<!--          <select id="customer" th:field="*{customer.id}" class="form-control" required>-->
+<!--            <option th:each="order : ${orders}" th:value="${order.customer.id}" th:text="${order.customer.id + '-' + order.customer.fullname +  '-' +  order.customer.phoneNumber +  '-' +  order.customer.address}"></option>-->
+<!--          </select>-->
+<!--        </div>-->
         <div class="form-group">
-          <label for="customer">Customer:</label>
-          <select id="customer" th:field="*{customer.id}" class="form-control" required>
-            <option th:each="order : ${orders}" th:value="${order.customer.id}" th:text="${order.customer.id + '-' + order.customer.fullname +  '-' +  order.customer.phoneNumber +  '-' +  order.customer.address}"></option>
-          </select>
+<!--          <label for="customer">Customer:</label>-->
+<!--          <p id="customer" th:text="${shipment.customer.id + '-' + shipment.customer.fullname + '-' + shipment.customer.phoneNumber + '-' + shipment.customer.address}"></p>-->
+          <input type="hidden" th:field="*{customer.id}">
         </div>
         <div class="form-group">
           <label for="shipper">Shipper:</label>

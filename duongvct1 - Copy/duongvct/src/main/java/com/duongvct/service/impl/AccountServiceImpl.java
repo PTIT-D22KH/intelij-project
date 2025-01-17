@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -146,5 +148,51 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
                 break;
         }
         return accounts;
+    }
+
+
+    @Override
+    public Page<Account> findAll(Pageable pageable) {
+        return accountRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Account> searchCustomers(String searchColumn, String searchValue, Pageable pageable) {
+        switch (searchColumn) {
+            case "username":
+                return accountRepository.findUserByUsernameContaining(searchValue, Role.ROLE_USER, pageable);
+            case "fullname":
+                return accountRepository.findUserByFullnameContaining(searchValue, Role.ROLE_USER, pageable);
+            case "email":
+                return accountRepository.findUserByEmailContaining(searchValue, Role.ROLE_USER, pageable);
+            case "phoneNumber":
+                return accountRepository.findUserByPhoneNumberContaining(searchValue, Role.ROLE_USER, pageable);
+            case "address":
+                return accountRepository.findUserByAddressContaining(searchValue, Role.ROLE_USER, pageable);
+            default:
+                return accountRepository.findByRoles(Role.ROLE_USER, pageable);
+        }
+    }
+
+    @Override
+    public Page<Account> findByRole(Role role, Pageable pageable) {
+        return accountRepository.findByRoles(role, pageable);
+    }
+    @Override
+    public Page<Account> searchEmployees(String searchColumn, String searchValue, Pageable pageable) {
+        switch (searchColumn) {
+            case "username":
+                return accountRepository.findUserByUsernameContaining(searchValue, Role.ROLE_EMPLOYEE, pageable);
+            case "fullname":
+                return accountRepository.findUserByFullnameContaining(searchValue, Role.ROLE_EMPLOYEE,pageable);
+            case "email":
+                return accountRepository.findUserByEmailContaining(searchValue, Role.ROLE_EMPLOYEE,pageable);
+            case "phoneNumber":
+                return accountRepository.findUserByPhoneNumberContaining(searchValue, Role.ROLE_EMPLOYEE,pageable);
+            case "address":
+                return accountRepository.findUserByAddressContaining(searchValue, Role.ROLE_EMPLOYEE,pageable);
+            default:
+                return accountRepository.findByRoles(Role.ROLE_EMPLOYEE, pageable);
+        }
     }
 }

@@ -20,6 +20,7 @@
                     <option value="category">Category</option>
                     <option value="unitName">Unit Name</option>
                 </select>
+                <button class="btn btn-primary" type="button" onclick="searchFoodItems()">Search</button>
             </div>
         </div>
     </div>
@@ -28,16 +29,16 @@
             <thead>
             <tr>
                 <th><input type="checkbox" id="selectAll"></th>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Category</th>
-                <th>Unit Name</th>
-                <th>Price</th>
+                <th><a th:href="@{/admin/food-item(page=${currentPage}, size=${size}, sortField='id', sortDir=${reverseSortDir})}">ID</a></th>
+                <th><a th:href="@{/admin/food-item(page=${currentPage}, size=${size}, sortField='name', sortDir=${reverseSortDir})}">Name</a></th>
+                <th><a th:href="@{/admin/food-item(page=${currentPage}, size=${size}, sortField='category.name', sortDir=${reverseSortDir})}">Category</a></th>
+                <th><a th:href="@{/admin/food-item(page=${currentPage}, size=${size}, sortField='unitName', sortDir=${reverseSortDir})}">Unit Name</a></th>
+                <th><a th:href="@{/admin/food-item(page=${currentPage}, size=${size}, sortField='price', sortDir=${reverseSortDir})}">Price</a></th>
                 <th>Action</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="item : ${items}">
+            <tr th:each="item : ${items.getContent()}">
                 <td><input type="checkbox" name="selectedIds" th:value="${item.id}"></td>
                 <td th:text="${item.id}"></td>
                 <td th:text="${item.name}"></td>
@@ -55,6 +56,19 @@
             <button type="submit" class="btn btn-danger">Delete Selected</button>
         </div>
     </form>
+    <div class="pagination">
+        <ul class="pagination">
+            <li th:classappend="${currentPage == 0} ? 'disabled'">
+                <a th:href="@{/admin/food-item(page=${currentPage - 1}, size=${size}, sortField=${sortField}, sortDir=${sortDir})}">&laquo;</a>
+            </li>
+            <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${i == currentPage} ? 'active'">
+                <a th:href="@{/admin/food-item(page=${i}, size=${size}, sortField=${sortField}, sortDir=${sortDir})}" th:text="${i + 1}">1</a>
+            </li>
+            <li th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                <a th:href="@{/admin/food-item(page=${currentPage + 1}, size=${size}, sortField=${sortField}, sortDir=${sortDir})}">&raquo;</a>
+            </li>
+        </ul>
+    </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>

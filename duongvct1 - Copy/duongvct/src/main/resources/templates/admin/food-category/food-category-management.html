@@ -19,6 +19,7 @@
                     <option value="name">Name</option>
                     <option value="slug">Slug</option>
                 </select>
+                <button class="btn btn-primary" type="button" onclick="searchFoodCategories()">Search</button>
             </div>
         </div>
     </div>
@@ -27,14 +28,14 @@
             <thead>
             <tr>
                 <th><input type="checkbox" id="selectAll"></th>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Slug</th>
+                <th><a th:href="@{/admin/food-category(page=${currentPage}, size=${size}, sortField='id', sortDir=${reverseSortDir})}">ID</a></th>
+                <th><a th:href="@{/admin/food-category(page=${currentPage}, size=${size}, sortField='name', sortDir=${reverseSortDir})}">Name</a></th>
+                <th><a th:href="@{/admin/food-category(page=${currentPage}, size=${size}, sortField='slug', sortDir=${reverseSortDir})}">Slug</a></th>
                 <th>Action</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="category : ${categories}">
+            <tr th:each="category : ${categories.getContent()}">
                 <td><input type="checkbox" name="selectedIds" th:value="${category.id}"></td>
                 <td th:text="${category.id}"></td>
                 <td th:text="${category.name}"></td>
@@ -50,12 +51,24 @@
             <button type="submit" class="btn btn-danger">Delete Selected</button>
         </div>
     </form>
+    <div class="pagination">
+        <ul class="pagination">
+            <li th:classappend="${currentPage == 0} ? 'disabled'">
+                <a th:href="@{/admin/food-category(page=${currentPage - 1}, size=${size}, sortField=${sortField}, sortDir=${sortDir})}">&laquo;</a>
+            </li>
+            <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${i == currentPage} ? 'active'">
+                <a th:href="@{/admin/food-category(page=${i}, size=${size}, sortField=${sortField}, sortDir=${sortDir})}" th:text="${i + 1}">1</a>
+            </li>
+            <li th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                <a th:href="@{/admin/food-category(page=${currentPage + 1}, size=${size}, sortField=${sortField}, sortDir=${sortDir})}">&raquo;</a>
+            </li>
+        </ul>
+    </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script src="/js/food-category-management.js"></script>
-</body>
 <script>
     function searchFoodCategories() {
         const searchInput = document.getElementById('searchInput').value;
@@ -76,4 +89,5 @@
         searchInput.removeAttribute('list');
     }
 </script>
+</body>
 </html>

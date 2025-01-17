@@ -128,7 +128,12 @@ public class OrderManagerController {
 //        System.out.println("Order: " + order);
         Order existingOrder = orderService.findById(id);
 //        System.out.println("Existing order: " + existingOrder);
-//        existingOrder.setCustomer(order.getCustomer());
+        existingOrder.setCustomer(order.getCustomer());
+        if (shipmentService.findByOrderId(existingOrder.getId()) != null) {
+            Shipment shipment = shipmentService.findByOrderId(existingOrder.getId());
+            shipment.setCustomer(order.getCustomer());
+            shipmentService.save(shipment);
+        }
 //        existingOrder.setOrderDate(order.getOrderDate());
 //        existingOrder.setOrderStatus(order.getOrderStatus());
 //        existingOrder.setOrderType(order.getOrderType());

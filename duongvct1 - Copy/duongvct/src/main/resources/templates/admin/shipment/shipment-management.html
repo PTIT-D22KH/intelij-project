@@ -18,6 +18,7 @@
                     <option value="shipper">Shipper</option>
                     <option value="shipmentStatus">Shipment Status</option>
                 </select>
+                <button class="btn btn-primary" type="button" onclick="searchShipments()">Search</button>
             </div>
         </div>
     </div>
@@ -26,23 +27,23 @@
             <thead>
             <tr>
                 <th><input type="checkbox" id="selectAll"></th>
-                <th>ID</th>
-                <th>Order ID</th>
-                <th>Customer</th>
-                <th>Shipper</th>
-                <th>Shipment Status</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Ship Cost</th>
+                <th><a th:href="@{/admin/shipment(page=${currentPage}, size=${size}, sortField='id', sortDir=${reverseSortDir})}">ID</a></th>
+                <th><a th:href="@{/admin/shipment(page=${currentPage}, size=${size}, sortField='order.id', sortDir=${reverseSortDir})}">Order ID</a></th>
+                <th><a th:href="@{/admin/shipment(page=${currentPage}, size=${size}, sortField='customer.fullname', sortDir=${reverseSortDir})}">Customer</a></th>
+                <th><a th:href="@{/admin/shipment(page=${currentPage}, size=${size}, sortField='shipper.fullname', sortDir=${reverseSortDir})}">Shipper</a></th>
+                <th><a th:href="@{/admin/shipment(page=${currentPage}, size=${size}, sortField='shipmentStatus', sortDir=${reverseSortDir})}">Shipment Status</a></th>
+                <th><a th:href="@{/admin/shipment(page=${currentPage}, size=${size}, sortField='startDate', sortDir=${reverseSortDir})}">Start Date</a></th>
+                <th><a th:href="@{/admin/shipment(page=${currentPage}, size=${size}, sortField='endDate', sortDir=${reverseSortDir})}">End Date</a></th>
+                <th><a th:href="@{/admin/shipment(page=${currentPage}, size=${size}, sortField='shipCost', sortDir=${reverseSortDir})}">Ship Cost</a></th>
                 <th>Action</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="shipment : ${shipments}">
+            <tr th:each="shipment : ${shipments.getContent()}">
                 <td><input type="checkbox" name="selectedIds" th:value="${shipment.id}"></td>
                 <td th:text="${shipment.id}"></td>
                 <td th:text="${shipment.order.id}"></td>
-                <td th:text="${shipment.customer.id + '-' + shipment.customer.fullname +  '-' +  shipment.customer.phoneNumber +  '-' +  shipment.customer.address}"></td>
+                <td th:text="${shipment.customer.id + '-' + shipment.customer.fullname + '-' + shipment.customer.phoneNumber + '-' + shipment.customer.address}"></td>
                 <td th:text="${shipment.shipper != null ? shipment.shipper.id + '-' + shipment.shipper.fullname + '-' + shipment.shipper.phoneNumber + '-' + shipment.shipper.address : ''}"></td>
                 <td th:text="${shipment.shipmentStatus.name}"></td>
                 <td th:text="${shipment.startDate != null ? #dates.format(shipment.startDate, 'yyyy-MM-dd HH:mm:ss') : ''}"></td>
@@ -58,6 +59,19 @@
             <button type="submit" class="btn btn-danger">Delete Selected</button>
         </div>
     </form>
+    <div class="pagination">
+        <ul class="pagination">
+            <li th:classappend="${currentPage == 0} ? 'disabled'">
+                <a th:href="@{/admin/shipment(page=${currentPage - 1}, size=${size}, sortField=${sortField}, sortDir=${sortDir})}">&laquo;</a>
+            </li>
+            <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${i == currentPage} ? 'active'">
+                <a th:href="@{/admin/shipment(page=${i}, size=${size}, sortField=${sortField}, sortDir=${sortDir})}" th:text="${i + 1}">1</a>
+            </li>
+            <li th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                <a th:href="@{/admin/shipment(page=${currentPage + 1}, size=${size}, sortField=${sortField}, sortDir=${sortDir})}">&raquo;</a>
+            </li>
+        </ul>
+    </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>

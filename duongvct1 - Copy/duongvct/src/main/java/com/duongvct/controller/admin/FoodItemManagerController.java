@@ -6,6 +6,10 @@ import com.duongvct.entity.FoodItem;
 import com.duongvct.service.impl.FoodCategoryServiceImpl;
 import com.duongvct.service.impl.FoodItemServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -30,15 +34,40 @@ public class FoodItemManagerController {
         binder.registerCustomEditor(FoodCategory.class, foodCategoryEditor);
     }
 
+//    @GetMapping("/admin/food-item")
+//    public String showFoodItems(@RequestParam(value = "searchColumn", required = false) String searchColumn,
+//                                @RequestParam(value = "searchValue", required = false) String searchValue, Model model) {
+//        List<FoodItem> items;
+//        if (searchColumn != null && searchValue != null) {
+//            items = foodItemService.searchFoodItems(searchColumn, searchValue);
+//        } else {
+//            items = foodItemService.findAll();
+//        }        model.addAttribute("items", items);
+//        return "admin/food-item/food-item-management";
+//    }
+
     @GetMapping("/admin/food-item")
-    public String showFoodItems(@RequestParam(value = "searchColumn", required = false) String searchColumn,
-                                @RequestParam(value = "searchValue", required = false) String searchValue, Model model) {
-        List<FoodItem> items;
+    public String showFoodItems(@RequestParam(value = "page", defaultValue = "0") int page,
+                                @RequestParam(value = "size", defaultValue = "3") int size,
+                                @RequestParam(value = "sortField", defaultValue = "id") String sortField,
+                                @RequestParam(value = "sortDir", defaultValue = "asc") String sortDir,
+                                @RequestParam(value = "searchColumn", required = false) String searchColumn,
+                                @RequestParam(value = "searchValue", required = false) String searchValue,
+                                Model model) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDir), sortField));
+        Page<FoodItem> items;
         if (searchColumn != null && searchValue != null) {
-            items = foodItemService.searchFoodItems(searchColumn, searchValue);
+            items = foodItemService.searchFoodItems(searchColumn, searchValue, pageable);
         } else {
-            items = foodItemService.findAll();
-        }        model.addAttribute("items", items);
+            items = foodItemService.findAll(pageable);
+        }
+        model.addAttribute("items", items);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", items.getTotalPages());
+        model.addAttribute("totalItems", items.getTotalElements());
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
         return "admin/food-item/food-item-management";
     }
 

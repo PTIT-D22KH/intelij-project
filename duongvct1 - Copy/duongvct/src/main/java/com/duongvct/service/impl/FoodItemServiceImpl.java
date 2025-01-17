@@ -4,6 +4,8 @@ import com.duongvct.entity.FoodItem;
 import com.duongvct.repository.FoodItemRepository;
 import com.duongvct.service.FoodItemService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -59,5 +61,27 @@ public class FoodItemServiceImpl implements FoodItemService {
                 return foodItemRepository.findAll();
         }
     }
+    @Override
+    public Page<FoodItem> findAll(Pageable pageable) {
+        return foodItemRepository.findAll(pageable);
+    }
 
+    @Override
+    public Page<FoodItem> searchFoodItems(String searchColumn, String searchValue, Pageable pageable) {
+        if (searchValue == null || searchValue.isEmpty()) {
+            return foodItemRepository.findAll(pageable);
+        }
+        switch (searchColumn) {
+            case "id":
+                return foodItemRepository.findById(Long.parseLong(searchValue), pageable);
+            case "name":
+                return foodItemRepository.findByNameContaining(searchValue, pageable);
+            case "category":
+                return foodItemRepository.findByCategoryNameContaining(searchValue, pageable);
+            case "unitName":
+                return foodItemRepository.findByUnitNameContaining(searchValue, pageable);
+            default:
+                return foodItemRepository.findAll(pageable);
+        }
+    }
 }

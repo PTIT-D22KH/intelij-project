@@ -6,6 +6,10 @@ import com.duongvct.service.impl.RegisterServiceImpl;
 import com.duongvct.utils.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,26 +37,34 @@ public class CustomerManagerController {
         dateFormat.setLenient(false);
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
     }
+
     @GetMapping("")
-    public String getCustomerManager(@RequestParam(value = "searchColumn", required = false) String searchColumn,
-                                     @RequestParam(value = "searchValue", required = false) String searchValue, Model model) {
-
-        List<Account> temp = accountService.findAll();
-        List<Account> res = new ArrayList<>();
-
+    public String getCustomerManager(@RequestParam(value = "page", defaultValue = "0") int page,
+                                     @RequestParam(value = "size", defaultValue = "1") int size,
+                                     @RequestParam(value = "sortField", defaultValue = "id") String sortField,
+                                     @RequestParam(value = "sortDir", defaultValue = "asc") String sortDir,
+                                     @RequestParam(value = "searchColumn", required = false) String searchColumn,
+                                     @RequestParam(value = "searchValue", required = false) String searchValue,
+                                     Model model) {
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString(sortDir), sortField);
+        Page<Account> accounts;
+//        List<Account> temp = accountService.findAll();
+//        List<Account> res = new ArrayList<>();
+        Page<Account> temp = accountService.findAll(pageable);
         if (searchColumn != null && searchValue != null) {
-            res = accountService.searchCustomers(searchColumn, searchValue);
+            accounts = accountService.searchCustomers(searchColumn, searchValue, pageable);
         } else {
-            for (Account account : temp) {
-                System.out.println(account);
-                if (account.getRoles().getId().equals("ROLE_USER")) {
-                    res.add(account);
-                }
-            }
+            accounts = accountService.findByRole(Role.ROLE_USER, pageable);
         }
 
 
-        model.addAttribute("accounts", res);
+        model.addAttribute("accounts", accounts);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", accounts.getTotalPages());
+        model.addAttribute("totalItems", accounts.getTotalElements());
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
         return "admin/customer/customer-management";
     }
 
