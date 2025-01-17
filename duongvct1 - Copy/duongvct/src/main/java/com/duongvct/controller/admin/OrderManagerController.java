@@ -6,6 +6,10 @@ import com.duongvct.service.TableService;
 import com.duongvct.service.impl.*;
 import com.duongvct.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -45,17 +49,42 @@ public class OrderManagerController {
 //        return "admin/order/order-management";
 //    }
 
+//    @GetMapping("/admin/order")
+//    public String showOrders(@RequestParam(value = "searchColumn", required = false) String searchColumn,
+//                             @RequestParam(value = "searchValue", required = false) String searchValue,
+//                             Model model) {
+//        List<Order> orders;
+//        if (searchColumn != null && searchValue != null) {
+//            orders = orderService.searchOrders(searchColumn, searchValue);
+//        } else {
+//            orders = orderService.findAll();
+//        }
+//        model.addAttribute("orders", orders);
+//        return "admin/order/order-management";
+//    }
+
     @GetMapping("/admin/order")
-    public String showOrders(@RequestParam(value = "searchColumn", required = false) String searchColumn,
+    public String showOrders(@RequestParam(value = "page", defaultValue = "0") int page,
+                             @RequestParam(value = "size", defaultValue = "3") int size,
+                             @RequestParam(value = "sortField", defaultValue = "id") String sortField,
+                             @RequestParam(value = "sortDir", defaultValue = "asc") String sortDir,
+                             @RequestParam(value = "searchColumn", required = false) String searchColumn,
                              @RequestParam(value = "searchValue", required = false) String searchValue,
                              Model model) {
-        List<Order> orders;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDir), sortField));
+        Page<Order> orders;
         if (searchColumn != null && searchValue != null) {
-            orders = orderService.searchOrders(searchColumn, searchValue);
+            orders = orderService.searchOrders(searchColumn, searchValue, pageable);
         } else {
-            orders = orderService.findAll();
+            orders = orderService.findAll(pageable);
         }
         model.addAttribute("orders", orders);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", orders.getTotalPages());
+        model.addAttribute("totalItems", orders.getTotalElements());
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
         return "admin/order/order-management";
     }
 

@@ -1,5 +1,6 @@
 package com.duongvct.service.impl;
 
+import com.duongvct.entity.Account;
 import com.duongvct.entity.Shipment;
 import com.duongvct.repository.ShipmentRepository;
 import com.duongvct.service.ShipmentService;
@@ -62,5 +63,10 @@ public class ShipmentServiceImpl implements ShipmentService {
             default:
                 return shipmentRepository.findAll();
         }
+    }
+
+    @Override
+    public List<Shipment> findByCustomer(Account customer) {
+        return shipmentRepository.findByCustomer(customer);
     }
 }

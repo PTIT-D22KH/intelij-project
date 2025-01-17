@@ -13,4 +13,6 @@ public interface FoodItemService {
     public List<FoodItem> findByCategoryId(Long categoryId);
 
     public List<FoodItem> searchFoodItems(String searchColumn, String searchValue);
+
+
 }

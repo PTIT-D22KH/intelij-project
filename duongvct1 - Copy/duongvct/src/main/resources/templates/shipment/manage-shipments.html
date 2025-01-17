@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head(title='Manage Shipments')}">
+  <link rel="stylesheet" href="/css/manage-shipments.css">
+</head>
+<body>
+<nav th:replace="~{fragments/header :: body}"></nav>
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-12">
+      <h2 class="text-center">Manage Shipments</h2>
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Order ID</th>
+          <th>Customer</th>
+          <th>Shipper</th>
+          <th>Shipment Status</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Ship Cost</th>
+          <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="shipment : ${shipments}">
+          <td th:text="${shipment.id}"></td>
+          <td th:text="${shipment.order.id}"></td>
+          <td th:text="${shipment.customer.fullname}"></td>
+          <td th:text="${shipment.shipper != null ? shipment.shipper.fullname : ''}"></td>
+          <td th:text="${shipment.shipmentStatus.name}"></td>
+          <td th:text="${shipment.startDate != null ? #dates.format(shipment.startDate, 'yyyy-MM-dd HH:mm:ss') : ''}"></td>
+          <td th:text="${shipment.endDate != null ? #dates.format(shipment.endDate, 'yyyy-MM-dd HH:mm:ss') : ''}"></td>
+          <td th:text="${shipment.shipCost != null ? shipment.shipCost : 0}"></td>
+          <td class="action-buttons">
+            <a th:href="@{/shipment/edit/{id}(id=${shipment.id})}" class="btn btn-warning btn-sm">Edit</a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

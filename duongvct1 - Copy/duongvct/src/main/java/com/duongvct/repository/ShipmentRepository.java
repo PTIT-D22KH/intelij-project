@@ -1,5 +1,6 @@
 package com.duongvct.repository;
 
+import com.duongvct.entity.Account;
 import com.duongvct.entity.Shipment;
 import com.duongvct.utils.ShipmentStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,6 +17,8 @@ public interface ShipmentRepository extends JpaRepository<Shipment, Long> {
     public List<Shipment> findByShipperFullnameContaining(String searchValue);
 
     public List<Shipment> findByShipmentStatus(ShipmentStatus shipmentStatus);
+
+    public List<Shipment> findByCustomer(Account customer);
 
 
 }
