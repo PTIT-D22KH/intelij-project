@@ -34,4 +34,23 @@ public class FoodCategoryServiceImpl implements FoodCategoryService {
     public void deleteById(Long id) {
         foodCategoryRepository.deleteById(id);
     }
+
+
+    @Override
+    public List<FoodCategory> searchFoodCategories(String searchColumn, String searchValue) {
+        if (searchValue == null || searchValue.isEmpty()) {
+            return foodCategoryRepository.findAll();
+        }
+        switch (searchColumn) {
+            case "id":
+                FoodCategory category = foodCategoryRepository.findById(Long.parseLong(searchValue)).orElse(null);
+                return category != null ? List.of(category) : List.of();
+            case "name":
+                return foodCategoryRepository.findByNameContaining(searchValue);
+            case "slug":
+                return foodCategoryRepository.findBySlugContaining(searchValue);
+            default:
+                return foodCategoryRepository.findAll();
+        }
+    }
 }

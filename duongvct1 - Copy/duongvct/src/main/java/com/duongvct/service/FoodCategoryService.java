@@ -9,4 +9,6 @@ public interface FoodCategoryService {
     FoodCategory findById(Long id);
     void save(FoodCategory category);
     void deleteById(Long id);
+
+    public List<FoodCategory> searchFoodCategories(String searchColumn, String searchValue);
 }

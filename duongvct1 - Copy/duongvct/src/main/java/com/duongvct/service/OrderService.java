@@ -12,4 +12,6 @@ public interface OrderService {
     void deleteById(Long id);
 
     public List<Order> findByOrderType(OrderType orderType);
+
+    public List<Order> searchOrders(String searchColumn, String searchValue);
 }

@@ -11,4 +11,5 @@ public interface ShipmentService {
     void deleteById(Long id);
 
     public Shipment findByOrderId(Long orderId);
+    public List<Shipment> searchShipments(String searchColumn, String searchValue);
 }

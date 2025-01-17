@@ -34,15 +34,24 @@ public class CustomerManagerController {
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
     }
     @GetMapping("")
-    public String getCustomerManager(Model model) {
+    public String getCustomerManager(@RequestParam(value = "searchColumn", required = false) String searchColumn,
+                                     @RequestParam(value = "searchValue", required = false) String searchValue, Model model) {
+
         List<Account> temp = accountService.findAll();
         List<Account> res = new ArrayList<>();
-        for (Account account : temp) {
-            System.out.println(account);
-            if (account.getRoles().getId().equals("ROLE_USER")) {
-                res.add(account);
+
+        if (searchColumn != null && searchValue != null) {
+            res = accountService.searchCustomers(searchColumn, searchValue);
+        } else {
+            for (Account account : temp) {
+                System.out.println(account);
+                if (account.getRoles().getId().equals("ROLE_USER")) {
+                    res.add(account);
+                }
             }
         }
+
+
         model.addAttribute("accounts", res);
         return "admin/customer/customer-management";
     }

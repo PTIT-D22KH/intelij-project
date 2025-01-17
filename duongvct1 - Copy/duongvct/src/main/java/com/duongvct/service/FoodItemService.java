@@ -11,4 +11,6 @@ public interface FoodItemService {
     void deleteById(Long id);
 
     public List<FoodItem> findByCategoryId(Long categoryId);
+
+    public List<FoodItem> searchFoodItems(String searchColumn, String searchValue);
 }

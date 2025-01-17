@@ -80,4 +80,71 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
     public List<Account> findByRole(Role role) {
         return accountRepository.findByRoles(role);
     }
+
+
+    @Override
+    public List<Account> searchCustomers(String searchColumn, String searchValue) {
+        if (searchValue == null || searchValue.isEmpty()) {
+            return accountRepository.findByRoles(Role.ROLE_USER);
+        }
+        List<Account> accounts = new ArrayList<>();
+        switch (searchColumn) {
+            case "id":
+                accounts = accountRepository.findUserById(searchValue, Role.ROLE_USER);
+                break;
+
+            case "username":
+                accounts = accountRepository.findUserByUsernameContaining(searchValue, Role.ROLE_USER);
+                break;
+            case "fullname":
+                accounts = accountRepository.findUserByFullnameContaining(searchValue, Role.ROLE_USER);
+                break;
+            case "email":
+                accounts = accountRepository.findUserByEmailContaining(searchValue, Role.ROLE_USER);
+                break;
+            case "phoneNumber":
+                accounts = accountRepository.findUserByPhoneNumberContaining(searchValue, Role.ROLE_USER);
+                break;
+            case "address":
+                accounts = accountRepository.findUserByAddressContaining(searchValue, Role.ROLE_USER);
+                break;
+            default:
+                accounts = accountRepository.findByRoles(Role.ROLE_USER);
+                break;
+        }
+        return accounts;
+    }
+
+    @Override
+    public List<Account> searchEmployees(String searchColumn, String searchValue) {
+        if (searchValue == null || searchValue.isEmpty()) {
+            return accountRepository.findByRoles(Role.ROLE_EMPLOYEE);
+        }
+        List<Account> accounts = new ArrayList<>();
+        switch (searchColumn) {
+            case "id":
+                accounts = accountRepository.findUserById(searchValue, Role.ROLE_EMPLOYEE);
+                break;
+
+            case "username":
+                accounts = accountRepository.findUserByUsernameContaining(searchValue, Role.ROLE_EMPLOYEE);
+                break;
+            case "fullname":
+                accounts = accountRepository.findUserByFullnameContaining(searchValue, Role.ROLE_EMPLOYEE);
+                break;
+            case "email":
+                accounts = accountRepository.findUserByEmailContaining(searchValue, Role.ROLE_EMPLOYEE);
+                break;
+            case "phoneNumber":
+                accounts = accountRepository.findUserByPhoneNumberContaining(searchValue, Role.ROLE_EMPLOYEE);
+                break;
+            case "address":
+                accounts = accountRepository.findUserByAddressContaining(searchValue, Role.ROLE_EMPLOYEE);
+                break;
+            default:
+                accounts = accountRepository.findByRoles(Role.ROLE_USER);
+                break;
+        }
+        return accounts;
+    }
 }

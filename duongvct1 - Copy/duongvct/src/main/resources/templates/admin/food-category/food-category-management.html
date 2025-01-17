@@ -10,6 +10,18 @@
     <div class="form-group text-center">
         <a href="/admin/food-category/add" class="btn btn-success">Add Food Category</a>
     </div>
+    <div class="form-group">
+        <div class="input-group">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search..." onkeydown="handleKeyDown(event)">
+            <div class="input-group-append">
+                <select id="searchColumn" class="form-control" onchange="updateSearchInput()">
+                    <option value="id">ID</option>
+                    <option value="name">Name</option>
+                    <option value="slug">Slug</option>
+                </select>
+            </div>
+        </div>
+    </div>
     <form th:action="@{/admin/food-category/delete}" method="post">
         <table class="table table-striped">
             <thead>
@@ -44,4 +56,24 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script src="/js/food-category-management.js"></script>
 </body>
+<script>
+    function searchFoodCategories() {
+        const searchInput = document.getElementById('searchInput').value;
+        const searchColumn = document.getElementById('searchColumn').value;
+        window.location.href = `/admin/food-category?searchColumn=${searchColumn}&searchValue=${searchInput}`;
+    }
+
+    function handleKeyDown(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            searchFoodCategories();
+        }
+    }
+
+    function updateSearchInput() {
+        const searchColumn = document.getElementById('searchColumn').value;
+        const searchInput = document.getElementById('searchInput');
+        searchInput.removeAttribute('list');
+    }
+</script>
 </html>

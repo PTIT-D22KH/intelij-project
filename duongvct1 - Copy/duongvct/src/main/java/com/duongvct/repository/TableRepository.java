@@ -10,4 +10,10 @@ import java.util.List;
 @Repository
 public interface TableRepository extends JpaRepository<Table, Long> {
     List<Table> findAllByTableStatus(TableStatus free);
+
+
+    List<Table> findByNameContaining(String searchValue);
+
+
+    List<Table> findByTableStatus(TableStatus valueOf);
 }

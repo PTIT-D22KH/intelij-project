@@ -9,4 +9,10 @@ import java.util.List;
 @Repository
 public interface FoodItemRepository extends JpaRepository<FoodItem, Long> {
     public List<FoodItem> findByCategoryId(Long categoryId);
+
+    public List<FoodItem> findByNameContaining(String searchValue);
+
+    public List<FoodItem> findByCategoryNameContaining(String searchValue);
+
+    public List<FoodItem> findByUnitNameContaining(String searchValue);
 }

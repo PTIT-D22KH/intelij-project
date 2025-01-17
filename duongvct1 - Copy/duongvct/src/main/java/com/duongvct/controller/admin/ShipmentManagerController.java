@@ -28,12 +28,18 @@ public class ShipmentManagerController {
     private AccountServiceImpl accountService;
 
     @GetMapping("/admin/shipment")
-    public String showAllShipments(Model model) {
+    public String showAllShipments(@RequestParam(value = "searchColumn", required = false) String searchColumn,
+                                   @RequestParam(value = "searchValue", required = false) String searchValue, Model model) {
         List<Shipment> shipments = shipmentService.findAll();
-        for (Shipment shipment : shipments) {
-            System.out.println(shipment.getCustomer());
-            System.out.println(shipment.getShipper());
+        if (searchColumn != null && searchValue != null) {
+            shipments = shipmentService.searchShipments(searchColumn, searchValue);
+        } else {
+            shipments = shipmentService.findAll();
         }
+//        for (Shipment shipment : shipments) {
+//            System.out.println(shipment.getCustomer());
+//            System.out.println(shipment.getShipper());
+//        }
         model.addAttribute("shipments", shipments);
         return "admin/shipment/shipment-management";
     }

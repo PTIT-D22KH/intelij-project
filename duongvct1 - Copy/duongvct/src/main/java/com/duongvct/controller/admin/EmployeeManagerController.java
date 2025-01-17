@@ -36,14 +36,20 @@ public class EmployeeManagerController {
     }
 
     @GetMapping("")
-    public String getEmployeeManager(Model model) {
+    public String getEmployeeManager(@RequestParam(value = "searchColumn", required = false) String searchColumn,
+                                     @RequestParam(value = "searchValue", required = false) String searchValue, Model model) {
         List<Account> temp = accountService.findAll();
         List<Account> res = new ArrayList<>();
-        for (Account account : temp) {
-            if (account.getRoles().getId().equals("ROLE_EMPLOYEE")) {
-                res.add(account);
+        if (searchColumn != null && searchValue != null) {
+            res = accountService.searchEmployees(searchColumn, searchValue);
+        } else {
+            for (Account account : temp) {
+                if (account.getRoles().getId().equals("ROLE_EMPLOYEE")) {
+                    res.add(account);
+                }
             }
         }
+
         model.addAttribute("accounts", res);
         return "admin/employee/employee-management";
     }

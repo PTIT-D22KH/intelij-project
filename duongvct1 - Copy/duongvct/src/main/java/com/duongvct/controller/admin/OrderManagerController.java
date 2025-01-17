@@ -38,9 +38,23 @@ public class OrderManagerController {
     @Autowired
     private ShipmentServiceImpl shipmentService;
 
+//    @GetMapping("/admin/order")
+//    public String showOrders(Model model) {
+//        List<Order> orders = orderService.findAll();
+//        model.addAttribute("orders", orders);
+//        return "admin/order/order-management";
+//    }
+
     @GetMapping("/admin/order")
-    public String showOrders(Model model) {
-        List<Order> orders = orderService.findAll();
+    public String showOrders(@RequestParam(value = "searchColumn", required = false) String searchColumn,
+                             @RequestParam(value = "searchValue", required = false) String searchValue,
+                             Model model) {
+        List<Order> orders;
+        if (searchColumn != null && searchValue != null) {
+            orders = orderService.searchOrders(searchColumn, searchValue);
+        } else {
+            orders = orderService.findAll();
+        }
         model.addAttribute("orders", orders);
         return "admin/order/order-management";
     }

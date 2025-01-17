@@ -18,8 +18,14 @@ public class TableManagerController {
     private TableServiceImpl tableService;
 
     @GetMapping("")
-    public String showTables(Model model) {
-        List<Table> tables = tableService.findAll();
+    public String showTables(@RequestParam(value = "searchColumn", required = false) String searchColumn,
+                             @RequestParam(value = "searchValue", required = false) String searchValue,Model model) {
+        List<Table> tables;
+        if (searchColumn != null && searchValue != null) {
+            tables = tableService.searchTables(searchColumn, searchValue);
+        } else {
+            tables = tableService.findAll();
+        }
         model.addAttribute("tables", tables);
         return "admin/table/table-management";
     }

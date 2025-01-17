@@ -17,8 +17,14 @@ public class FoodCategoryManagerController {
     private FoodCategoryServiceImpl foodCategoryService;
 
     @GetMapping("")
-    public String showFoodCategories(Model model) {
-        List<FoodCategory> categories = foodCategoryService.findAll();
+    public String showFoodCategories(@RequestParam(value = "searchColumn", required = false) String searchColumn,
+                                     @RequestParam(value = "searchValue", required = false) String searchValue, Model model) {
+        List<FoodCategory> categories;
+        if (searchColumn != null && searchValue != null) {
+            categories = foodCategoryService.searchFoodCategories(searchColumn, searchValue);
+        } else {
+            categories = foodCategoryService.findAll();
+        }
         model.addAttribute("categories", categories);
         return "admin/food-category/food-category-management";
     }

@@ -10,6 +10,19 @@
     <div class="form-group text-center">
         <a href="/admin/food-item/add" class="btn btn-success">Add Food Item</a>
     </div>
+    <div class="form-group">
+        <div class="input-group">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search..." onkeydown="handleKeyDown(event)">
+            <div class="input-group-append">
+                <select id="searchColumn" class="form-control" onchange="updateSearchInput()">
+                    <option value="id">ID</option>
+                    <option value="name">Name</option>
+                    <option value="category">Category</option>
+                    <option value="unitName">Unit Name</option>
+                </select>
+            </div>
+        </div>
+    </div>
     <form th:action="@{/admin/food-item/delete}" method="post">
         <table class="table table-striped">
             <thead>
@@ -47,5 +60,25 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script src="/js/food-item-management.js"></script>
+<script>
+    function searchFoodItems() {
+        const searchInput = document.getElementById('searchInput').value;
+        const searchColumn = document.getElementById('searchColumn').value;
+        window.location.href = `/admin/food-item?searchColumn=${searchColumn}&searchValue=${searchInput}`;
+    }
+
+    function handleKeyDown(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            searchFoodItems();
+        }
+    }
+
+    function updateSearchInput() {
+        const searchColumn = document.getElementById('searchColumn').value;
+        const searchInput = document.getElementById('searchInput');
+        searchInput.removeAttribute('list');
+    }
+</script>
 </body>
 </html>

@@ -7,6 +7,20 @@
 <nav th:replace="~{fragments/header :: body}"></nav>
 <div class="container table-container">
     <h2 class="text-center">Shipment Management</h2>
+    <div class="form-group">
+        <div class="input-group">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search..." onkeydown="handleKeyDown(event)">
+            <div class="input-group-append">
+                <select id="searchColumn" class="form-control" onchange="updateSearchInput()">
+                    <option value="id">ID</option>
+                    <option value="order">Order ID</option>
+                    <option value="customer">Customer</option>
+                    <option value="shipper">Shipper</option>
+                    <option value="shipmentStatus">Shipment Status</option>
+                </select>
+            </div>
+        </div>
+    </div>
     <form th:action="@{/admin/shipment/delete}" method="post">
         <table class="table table-striped">
             <thead>
@@ -49,5 +63,36 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script src="/js/shipment-management.js"></script>
+<script>
+    function searchShipments() {
+        const searchInput = document.getElementById('searchInput').value;
+        const searchColumn = document.getElementById('searchColumn').value;
+        window.location.href = `/admin/shipment?searchColumn=${searchColumn}&searchValue=${searchInput}`;
+    }
+
+    function handleKeyDown(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            searchShipments();
+        }
+    }
+
+    function updateSearchInput() {
+        const searchColumn = document.getElementById('searchColumn').value;
+        const searchInput = document.getElementById('searchInput');
+        if (searchColumn === 'shipmentStatus') {
+            searchInput.setAttribute('list', 'shipmentStatusOptions');
+        } else {
+            searchInput.removeAttribute('list');
+        }
+    }
+</script>
+<datalist id="shipmentStatusOptions">
+    <option value="TOPAY">TOPAY</option>
+    <option value="TOSHIP">TOSHIP</option>
+    <option value="TORECEIVE">TORECEIVE</option>
+    <option value="COMPLETED">COMPLETED</option>
+    <option value="CANCELLED">CANCELLED</option>
+</datalist>
 </body>
 </html>

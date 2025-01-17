@@ -10,6 +10,18 @@
   <div class="form-group text-center">
     <a href="/admin/table/add" class="btn btn-success">Add Table</a>
   </div>
+  <div class="form-group">
+    <div class="input-group">
+      <input type="text" id="searchInput" class="form-control" placeholder="Search..." onkeydown="handleKeyDown(event)">
+      <div class="input-group-append">
+        <select id="searchColumn" class="form-control" onchange="updateSearchInput()">
+          <option value="id">ID</option>
+          <option value="name">Name</option>
+          <option value="status">Status</option>
+        </select>
+      </div>
+    </div>
+  </div>
   <form th:action="@{/admin/table/delete}" method="post">
     <table class="table table-striped">
       <thead>
@@ -43,5 +55,33 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script src="/js/table-management.js"></script>
+<script>
+    function searchTables() {
+        const searchInput = document.getElementById('searchInput').value;
+        const searchColumn = document.getElementById('searchColumn').value;
+        window.location.href = `/admin/table?searchColumn=${searchColumn}&searchValue=${searchInput}`;
+    }
+
+    function handleKeyDown(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            searchTables();
+        }
+    }
+
+    function updateSearchInput() {
+        const searchColumn = document.getElementById('searchColumn').value;
+        const searchInput = document.getElementById('searchInput');
+        if (searchColumn === 'status') {
+            searchInput.setAttribute('list', 'tableStatusOptions');
+        } else {
+            searchInput.removeAttribute('list');
+        }
+    }
+</script>
+<datalist id="tableStatusOptions">
+  <option value="FREE">FREE</option>
+  <option value="SERVING">SERVING</option>
+</datalist>
 </body>
 </html>

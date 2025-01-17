@@ -20,4 +20,8 @@ public interface AccountService {
     public List<Account> findAllUsers();
 
     public List<Account> findByRole(Role role);
+
+    public List<Account> searchCustomers(String searchColumn, String searchValue);
+
+    public List<Account> searchEmployees(String searchColumn, String searchValue);
 }

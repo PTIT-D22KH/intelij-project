@@ -31,9 +31,14 @@ public class FoodItemManagerController {
     }
 
     @GetMapping("/admin/food-item")
-    public String showFoodItems(Model model) {
-        List<FoodItem> items = foodItemService.findAll();
-        model.addAttribute("items", items);
+    public String showFoodItems(@RequestParam(value = "searchColumn", required = false) String searchColumn,
+                                @RequestParam(value = "searchValue", required = false) String searchValue, Model model) {
+        List<FoodItem> items;
+        if (searchColumn != null && searchValue != null) {
+            items = foodItemService.searchFoodItems(searchColumn, searchValue);
+        } else {
+            items = foodItemService.findAll();
+        }        model.addAttribute("items", items);
         return "admin/food-item/food-item-management";
     }
 

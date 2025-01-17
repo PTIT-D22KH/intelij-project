@@ -11,4 +11,6 @@ public interface TableService {
     void deleteById(Long id);
 
     public List<Table> findAllFreeTables();
+
+    public List<Table> searchTables(String searchColumn, String searchValue);
 }

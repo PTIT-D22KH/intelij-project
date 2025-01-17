@@ -10,6 +10,20 @@
     <div class="form-group text-center">
         <a href="/admin/order/add" class="btn btn-success">Add Order</a>
     </div>
+    <div class="form-group">
+        <div class="input-group">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search..." onkeydown="handleKeyDown(event)">
+            <div class="input-group-append">
+                <select id="searchColumn" class="form-control" onchange="updateSearchInput()">
+                    <option value="id">ID</option>
+                    <option value="customer">Customer</option>
+                    <option value="orderStatus">Order Status</option>
+                    <option value="orderType">Order Type</option>
+                </select>
+                <button class="btn btn-primary" type="button" onclick="searchOrders()">Search</button>
+            </div>
+        </div>
+    </div>
     <form th:action="@{/admin/order/delete}" method="post">
         <table class="table table-striped">
             <thead>
@@ -57,5 +71,40 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script src="/js/order-management.js"></script>
+<script>
+    function searchOrders() {
+        const searchInput = document.getElementById('searchInput').value;
+        const searchColumn = document.getElementById('searchColumn').value;
+        window.location.href = `/admin/order?searchColumn=${searchColumn}&searchValue=${searchInput}`;
+    }
+
+    function handleKeyDown(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            searchOrders();
+        }
+    }
+
+    function updateSearchInput() {
+        const searchColumn = document.getElementById('searchColumn').value;
+        const searchInput = document.getElementById('searchInput');
+        if (searchColumn === 'orderStatus') {
+            searchInput.setAttribute('list', 'orderStatusOptions');
+        } else if (searchColumn === 'orderType') {
+            searchInput.setAttribute('list', 'orderTypeOptions');
+        } else {
+            searchInput.removeAttribute('list');
+        }
+    }
+</script>
+<datalist id="orderStatusOptions">
+    <option value="PAID">PAID</option>
+    <option value="UNPAID">UNPAID</option>
+    <option value="CANCEL">CANCEL</option>
+</datalist>
+<datalist id="orderTypeOptions">
+    <option value="ONLINE">ONLINE</option>
+    <option value="LOCAL">LOCAL</option>
+</datalist>
 </body>
 </html>
