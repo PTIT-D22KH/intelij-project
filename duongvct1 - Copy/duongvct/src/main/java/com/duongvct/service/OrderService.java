@@ -2,6 +2,7 @@ package com.duongvct.service;
 
 import com.duongvct.entity.Account;
 import com.duongvct.entity.Order;
+import com.duongvct.utils.OrderStatus;
 import com.duongvct.utils.OrderType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,4 +26,6 @@ public interface OrderService {
     Page<Order> findAll(Pageable pageable);
 
     Page<Order> searchOrders(String searchColumn, String searchValue, Pageable pageable);
+
+    Order findCurrentOrderByCustomer(Account customer);
 }

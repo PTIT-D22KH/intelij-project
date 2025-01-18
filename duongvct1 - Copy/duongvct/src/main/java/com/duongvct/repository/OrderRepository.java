@@ -28,4 +28,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> , PagingAndS
 
     Page<Order> findByOrderType(OrderType orderType, Pageable pageable);
 
+
+    Order findByCustomerAndOrderStatus(Account customer, OrderStatus orderStatus);
 }

@@ -4,7 +4,6 @@ import com.duongvct.entity.*;
 import com.duongvct.service.impl.*;
 import com.duongvct.utils.OrderStatus;
 import com.duongvct.utils.OrderType;
-import com.duongvct.utils.ShipmentStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
@@ -13,9 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/store")
@@ -31,12 +28,10 @@ public class StoreController {
     private AccountServiceImpl accountService;
 
     @Autowired
-    private ShipmentServiceImpl shipmentService;
+    private OrderItemServiceImpl orderItemService;
 
     @Autowired
     private FoodCategoryServiceImpl foodCategoryService;
-
-//    private Map<String, Map<Long, Integer>> userCarts = new HashMap<>();
 
     @GetMapping("")
     public String showStore(Model model) {
@@ -47,41 +42,85 @@ public class StoreController {
 
     @GetMapping("/cart")
     public String showCart(@AuthenticationPrincipal User user, Model model) {
-        model.addAttribute("items", foodItemService.findAll());
+        if (user == null) {
+            return "redirect:/login";
+        }
+        Account customer = accountService.findByUsername(user.getUsername());
+        Order currentOrder = orderService.findCurrentOrderByCustomer(customer);
+        model.addAttribute("order", currentOrder);
         return "cart";
     }
 
     @PostMapping("/cart/add")
-    @ResponseBody
-    public String addToCart(@RequestParam("itemId") Long itemId, @RequestParam("quantity") int quantity, @AuthenticationPrincipal User user) {
-        String username = user.getUsername();
-//        userCarts.putIfAbsent(username, new HashMap<>());
-//        Map<Long, Integer> cart = userCarts.get(username);
-//        cart.put(itemId, cart.getOrDefault(itemId, 0) + quantity);
-        return "Item added to cart";
-    }
-
-    @GetMapping("/order/create")
-    public String createOrderForm(Model model) {
-        model.addAttribute("order", new Order());
-        model.addAttribute("customers", accountService.findAllUsers());
-        model.addAttribute("orderTypes", OrderType.values());
-        return "order/create-order";
-    }
-
-    @PostMapping("/order/create")
-    public String createOrder(@ModelAttribute Order order, @AuthenticationPrincipal User user) {
+    public String addToCart(@RequestParam("itemId") Long itemId, @RequestParam("quantity") Long quantity, @AuthenticationPrincipal User user) {
+        if (user == null) {
+            return "redirect:/login";
+        }
         Account customer = accountService.findByUsername(user.getUsername());
-        order.setCustomer(customer);
-        order.setOrderDate(new Timestamp(System.currentTimeMillis()));
-        order.setOrderStatus(OrderStatus.UNPAID);
-        order.setTotalAmount(0L);
-        orderService.save(order);
+        Order currentOrder = orderService.findCurrentOrderByCustomer(customer);
+
+        if (currentOrder == null) {
+            currentOrder = new Order();
+            currentOrder.setCustomer(customer);
+            currentOrder.setOrderDate(new Timestamp(System.currentTimeMillis()));
+            currentOrder.setOrderStatus(OrderStatus.UNPAID);
+            currentOrder.setOrderType(OrderType.ONLINE);
+            currentOrder.setTotalAmount(0L);
+            orderService.save(currentOrder);
+        }
+
+        FoodItem foodItem = foodItemService.findById(itemId);
+        OrderItem orderItem = new OrderItem();
+        orderItem.setOrder(currentOrder);
+        orderItem.setFoodItem(foodItem);
+        orderItem.setQuantity(quantity);
+        orderItemService.save(orderItem);
+
+        currentOrder.getOrderItems().add(orderItem);
+        currentOrder.setTotalAmount(currentOrder.getTotalAmount() + foodItem.getPrice() * quantity);
+        orderService.save(currentOrder);
+
+        return "redirect:/store/cart";
+    }
+
+    @PostMapping("/cart/remove")
+    public String removeFromCart(@RequestParam("itemId") Long itemId, @AuthenticationPrincipal User user) {
+        if (user == null) {
+            return "redirect:/login";
+        }
+        Account customer = accountService.findByUsername(user.getUsername());
+        Order currentOrder = orderService.findCurrentOrderByCustomer(customer);
+
+        if (currentOrder != null) {
+            List<OrderItem> orderItems = currentOrder.getOrderItems();
+            orderItems.removeIf(orderItem -> orderItem.getFoodItem().getId().equals(itemId));
+            orderService.save(currentOrder);
+        }
+
+        return "redirect:/store/cart";
+    }
+
+    @PostMapping("/cart/checkout")
+    public String checkout(@AuthenticationPrincipal User user) {
+        if (user == null) {
+            return "redirect:/login";
+        }
+        Account customer = accountService.findByUsername(user.getUsername());
+        Order currentOrder = orderService.findCurrentOrderByCustomer(customer);
+
+        if (currentOrder != null) {
+            currentOrder.setOrderStatus(OrderStatus.UNPAID);
+            orderService.save(currentOrder);
+        }
+
         return "redirect:/store/order/manage";
     }
 
     @GetMapping("/order/manage")
     public String manageOrders(@AuthenticationPrincipal User user, Model model) {
+        if (user == null) {
+            return "redirect:/login";
+        }
         Account customer = accountService.findByUsername(user.getUsername());
         List<Order> orders = orderService.findByCustomer(customer);
         model.addAttribute("orders", orders);
@@ -120,24 +159,8 @@ public class StoreController {
         if (existingOrder.getPaidAmount() >= amountAfterDiscount) {
             existingOrder.setOrderStatus(OrderStatus.PAID);
             existingOrder.setPayDate(new Timestamp(System.currentTimeMillis()));
-            if (existingOrder.getOrderType() == OrderType.ONLINE) {
-                Shipment shipment = new Shipment();
-                shipment.setOrder(existingOrder);
-                shipment.setCustomer(existingOrder.getCustomer());
-                shipment.setShipmentStatus(ShipmentStatus.TOSHIP);
-                shipment.setStartDate(new Timestamp(System.currentTimeMillis()));
-                shipmentService.save(shipment);
-            }
+            orderService.save(existingOrder);
         }
-        orderService.save(existingOrder);
         return "redirect:/store/order/manage";
-    }
-
-    @GetMapping("/shipment/manage")
-    public String manageShipments(@AuthenticationPrincipal User user, Model model) {
-        Account customer = accountService.findByUsername(user.getUsername());
-        List<Shipment> shipments = shipmentService.findByCustomer(customer);
-        model.addAttribute("shipments", shipments);
-        return "shipment/manage-shipments";
     }
 }

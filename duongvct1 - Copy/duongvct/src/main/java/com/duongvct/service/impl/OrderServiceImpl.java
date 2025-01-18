@@ -104,4 +104,9 @@ public class OrderServiceImpl implements OrderService {
                 return orderRepository.findAll(pageable);
         }
     }
+
+    @Override
+    public Order findCurrentOrderByCustomer(Account customer) {
+        return orderRepository.findByCustomerAndOrderStatus(customer, OrderStatus.UNPAID);
+    }
 }
