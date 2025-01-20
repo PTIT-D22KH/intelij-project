@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -63,16 +64,28 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public void updateTeam(int id, Team team) {
         Team currentTeam = teamRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Team with id " + id + " not found"));
-        currentTeam.setCoach(team.getCoach());
+//        currentTeam.setCoach(team.getCoach());
         currentTeam.setCountry(team.getCountry());
         currentTeam.setName(team.getName());
         currentTeam.setRanked(team.getRanked());
-        currentTeam.setPlayers(team.getPlayers());
+//        currentTeam.setPlayers(team.getPlayers());
         teamRepository.save(currentTeam);
     }
 
     @Override
     public void deleteTeam(int id) {
+        Team team = teamRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Team with id " + id + " not found"));
+
+
+        for (Player player : team.getPlayers()) {
+            Player curr = playerRepository.findById(player.getId()).orElse(null);
+            if (curr.getTeam().getId() == id) {
+                curr.setTeam(null);
+                playerRepository.save(curr);
+            }
+        }
+        team.setPlayers(new ArrayList<>());
+        removeCoachFromTeam(id, team.getCoach().getId());
         teamRepository.deleteById(id);
     }
 

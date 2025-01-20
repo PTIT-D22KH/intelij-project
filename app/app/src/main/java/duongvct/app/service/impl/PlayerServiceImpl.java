@@ -61,7 +61,7 @@ public class PlayerServiceImpl implements PlayerService {
         currentPlayer.setCountry(player.getCountry());
         currentPlayer.setAge(player.getAge());
         currentPlayer.setPosition(player.getPosition());
-        currentPlayer.setTeam(player.getTeam());
+//        currentPlayer.setTeam(player.getTeam());
         playerRepository.save(currentPlayer);
     }
 

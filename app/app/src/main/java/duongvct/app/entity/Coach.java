@@ -19,7 +19,7 @@ public class Coach {
     @Column
     private int age;
 
-    @OneToOne(mappedBy = "coach")
+    @OneToOne(mappedBy = "coach", cascade = CascadeType.ALL)
     @JsonBackReference
     private Team team;
 
