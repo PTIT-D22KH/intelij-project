@@ -24,7 +24,8 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/api/v1/users").permitAll() // Allow access to the user registration endpoint
-                        .anyRequest().authenticated()
+//                        .anyRequest().authenticated()
+                                .anyRequest().permitAll()
                 )
                 .csrf(csrf -> csrf.disable())
                 .httpBasic(Customizer.withDefaults());
