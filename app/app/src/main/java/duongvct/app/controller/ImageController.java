@@ -5,11 +5,11 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -33,4 +33,24 @@ public class ImageController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+//    @PostMapping("/avatar")
+//    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
+//        if (file.isEmpty()) {
+//            return new ResponseEntity<>("File is empty", HttpStatus.BAD_REQUEST);
+//        }
+//
+//        try {
+//            // Define the path where the file will be saved
+//            String uploadDir = new ClassPathResource("static/images/avatar/").getFile().getAbsolutePath();
+//            File destinationFile = new File(uploadDir, file.getOriginalFilename());
+//
+//            // Save the file
+//            file.transferTo(destinationFile);
+//
+//            return new ResponseEntity<>("File uploaded successfully", HttpStatus.OK);
+//        } catch (IOException e) {
+//            return new ResponseEntity<>("Failed to upload file", HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
+
 }
