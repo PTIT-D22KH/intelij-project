@@ -9,5 +9,9 @@ public interface UserService {
 
     public List<User> findAll();
 
-//    public void updateUser(User user);
+    public void updateUser(int id, User user);
+
+    public User getUserById(int id);
+
+    public void deleteUser(int id);
 }

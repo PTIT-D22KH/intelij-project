@@ -24,7 +24,7 @@ public class UserController {
 
     @GetMapping
     @Operation(summary = "Show all users", description = "This API shows all users")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+//    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public List<User> showAllUsers() {
         return userService.findAll();
     }
@@ -35,4 +35,25 @@ public class UserController {
     public void register(@RequestBody User user) {
         userService.registerUser(user);
     }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Update a user", description = "This API updates a user")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateUser(@PathVariable int id, @RequestBody User user) {
+        userService.updateUser(id, user);
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Get a user by id", description = "This API gets a user by id")
+    public User getUserById(@PathVariable int id) {
+        return userService.getUserById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete a user by id", description = "This API deletes a user by id")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUser(@PathVariable int id) {
+        userService.deleteUser(id);
+    }
 }
+
