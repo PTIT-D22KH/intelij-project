@@ -7,6 +7,8 @@ import duongvct.app.repository.UserRepository;
 import duongvct.app.service.UserService;
 import duongvct.app.utls.Role;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -76,6 +78,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
+    public Page<User> findAll(Pageable pageable) {
+        return userRepository.findAll(pageable);
+    }
+
+    @Override
     public void updateUser(int id, User user) {
         User currentUser = userRepository.findById(id).orElse(null);
         if (currentUser == null) {
@@ -83,6 +90,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         }
         currentUser.setFullName(user.getFullName());
         currentUser.setPhoneNumber(user.getPhoneNumber());
+        currentUser.setAvatar(user.getAvatar());
         userRepository.save(currentUser);
     }
 

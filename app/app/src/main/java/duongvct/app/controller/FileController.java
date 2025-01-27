@@ -11,10 +11,11 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v1/file")
+@CrossOrigin(origins = "http://localhost:5173")
 public class FileController {
     @PostMapping("/upload")
     public ResponseEntity<String> uploadImage(
-            @RequestParam("file") MultipartFile file,
+            @RequestParam("fileImg") MultipartFile file,
             @RequestHeader("upload-type") String targetFolder) {
         if (file.isEmpty()) {
             return new ResponseEntity<>("File is empty", HttpStatus.BAD_REQUEST);
@@ -22,13 +23,13 @@ public class FileController {
 
         try {
             // Define the path where the file will be saved
-            String uploadDir = new ClassPathResource("static/images/" + targetFolder).getFile().getAbsolutePath();
+            String uploadDir = new File("src/main/resources/static/images/" + targetFolder).getAbsolutePath();
             File destinationFile = new File(uploadDir, file.getOriginalFilename());
 
             // Save the file
             file.transferTo(destinationFile);
 
-            return new ResponseEntity<>("File uploaded successfully", HttpStatus.OK);
+            return new ResponseEntity<>(file.getOriginalFilename(), HttpStatus.OK);
         } catch (IOException e) {
             return new ResponseEntity<>("Failed to upload file", HttpStatus.INTERNAL_SERVER_ERROR);
         }
