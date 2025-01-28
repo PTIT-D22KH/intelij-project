@@ -4,6 +4,7 @@ import duongvct.app.entity.User;
 import duongvct.app.exception.MissingFieldException;
 import duongvct.app.exception.UserAlreadyExistsException;
 import duongvct.app.repository.UserRepository;
+import duongvct.app.security.CustomUserDetails;
 import duongvct.app.service.UserService;
 import duongvct.app.utls.Role;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +33,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        return org.springframework.security.core.userdetails.User.withUsername(user.getEmail())
-                .password(user.getPassword())
-                .authorities(user.getRole().getId())
-                .build();
+        return new CustomUserDetails(user);
 
     }
 

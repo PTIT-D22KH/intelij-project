@@ -1,6 +1,8 @@
 package duongvct.app.utls;
 
-public enum Role {
+import org.springframework.security.core.GrantedAuthority;
+
+public enum Role implements GrantedAuthority {
     ROLE_ADMIN("ROLE_ADMIN", "admin"),
     ROLE_USER("ROLE_USER", "user"),
 //    ROLE_EMPLOYEE("ROLE_EMPLOYEE", "employee"),
@@ -28,5 +30,10 @@ public enum Role {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String getAuthority() {
+        return id;
     }
 }

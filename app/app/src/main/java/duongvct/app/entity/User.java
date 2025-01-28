@@ -2,6 +2,10 @@ package duongvct.app.entity;
 
 import duongvct.app.utls.Role;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+
+import java.util.Collections;
+import java.util.Set;
 
 @Entity
 public class User {
@@ -81,5 +85,9 @@ public class User {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public Set<GrantedAuthority> getAuthorities() {
+        return Collections.singleton(role);
     }
 }
