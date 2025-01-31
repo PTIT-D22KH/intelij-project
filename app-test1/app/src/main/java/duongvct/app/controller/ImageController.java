@@ -1,5 +1,7 @@
 package duongvct.app.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -15,9 +17,11 @@ import java.nio.file.Path;
 
 @RestController
 @RequestMapping("/images")
+@Tag(name = "Image Controller", description = "APIs for handling images")
 public class ImageController {
 
     @GetMapping("/avatar/{filename:.+}")
+    @Operation(summary = "Get an image by filename", description = "This API retrieves an image by its filename")
     public ResponseEntity<Resource> getImage(@PathVariable String filename) {
         try {
             Resource resource = new ClassPathResource("static/images/avatar/" + filename);

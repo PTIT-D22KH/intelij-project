@@ -1,5 +1,7 @@
 package duongvct.app.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +14,10 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api/v1/file")
 @CrossOrigin(origins = "http://localhost:5173")
+@Tag(name = "File Controller", description = "APIs for handling files")
 public class FileController {
     @PostMapping("/upload")
+    @Operation(summary = "Upload an image", description = "This API uploads an image to the server")
     public ResponseEntity<String> uploadImage(
             @RequestParam("fileImg") MultipartFile file,
             @RequestHeader("upload-type") String targetFolder) {

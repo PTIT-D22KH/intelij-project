@@ -29,6 +29,17 @@ public class Team {
     @JoinColumn(name = "coach_id")
     private Coach coach;
 
+    @OneToMany(mappedBy = "home")
+    private List<Game> homeGames = new ArrayList<>();
+
+    @OneToMany(mappedBy = "away")
+    private List<Game> awayGames = new ArrayList<>();
+
+    @OneToMany(mappedBy = "team")
+    private List<TeamTableDetail> teamTableDetails = new ArrayList<>();
+
+
+
     public Coach getCoach() {
         return coach;
     }
