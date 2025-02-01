@@ -1,16 +1,17 @@
 package vn.app.duongvct.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import vn.app.duongvct.domain.User;
+import vn.app.duongvct.repository.UserRepository;
 import vn.app.duongvct.service.UserService;
+
+import java.util.List;
 
 @Controller
 public class UserController {
-    private UserService userService;
-
+    private final UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -18,21 +19,28 @@ public class UserController {
 
     @GetMapping("")
     public String getHomePage(Model model) {
-        String message =  userService.handleHello();
+        List<User> users = this.userService.getAllUsersByEmail("1@gmail.com");
+        String message =  this.userService.handleHello();
         model.addAttribute("eric", message);
         return "hello";
     }
 
     @GetMapping("/admin/user")
+    public String getUserPage(Model model) {
+        List<User> users = this.userService.getAllUsers();
+        model.addAttribute("users", users);
+        return "admin/user/table-user";
+    }
+
+    @GetMapping("/admin/user/create")
     public String getCreateUserPage(Model model) {
         model.addAttribute("newUser", new User());
         return "admin/user/create";
     }
 
     @PostMapping("/admin/user/create")
-    @ResponseBody
     public String createUser(Model model, @ModelAttribute User hoidanit) {
-        System.out.println(hoidanit);
-        return "Hello";
+        this.userService.handleSaveUser(hoidanit);
+        return "redirect:/admin/user";
     }
 }
