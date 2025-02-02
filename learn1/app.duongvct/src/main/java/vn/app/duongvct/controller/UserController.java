@@ -6,8 +6,10 @@ import org.springframework.web.bind.annotation.*;
 import vn.app.duongvct.domain.User;
 import vn.app.duongvct.repository.UserRepository;
 import vn.app.duongvct.service.UserService;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
+
 
 @Controller
 public class UserController {
@@ -42,5 +44,17 @@ public class UserController {
     public String createUser(Model model, @ModelAttribute User hoidanit) {
         this.userService.handleSaveUser(hoidanit);
         return "redirect:/admin/user";
+    }
+    @GetMapping("/admin/user/{id}")
+    public String getUserDetailPage(Model model, @PathVariable Long id) {
+        User user = this.userService.getUserById(id);
+        model.addAttribute("user", user);
+        return "admin/user/user-detail";
+    }
+    @GetMapping("/admin/user/update/{id}")
+    public String updateUserDetailPage(Model model, @PathVariable Long id) {
+        User user = this.userService.getUserById(id);
+        model.addAttribute("user", user);
+        return "admin/user/update-user";
     }
 }
