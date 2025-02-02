@@ -10,6 +10,9 @@ public class LeagueDTO {
     private String name;
     private int numRounds;
 
+    public LeagueDTO() {
+    }
+
     public LeagueDTO(int id, String name, int numRounds) {
         this.id = id;
         this.name = name;

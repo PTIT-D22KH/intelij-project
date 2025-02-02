@@ -2,6 +2,9 @@ package duongvct.app.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 public class LeagueTable {
     @Id
@@ -12,8 +15,8 @@ public class LeagueTable {
     @JoinColumn(name = "league_id")
     private League league;
 
-    @OneToOne(mappedBy = "leagueTable")
-    private LeagueTableDetail leagueTableDetail;
+    @OneToMany(mappedBy = "leagueTable")
+    private List<TeamTableDetail> teamTableDetails = new ArrayList<>();
 
     public int getId() {
         return id;
@@ -31,11 +34,5 @@ public class LeagueTable {
         this.league = league;
     }
 
-    public LeagueTableDetail getLeagueTableDetail() {
-        return leagueTableDetail;
-    }
 
-    public void setLeagueTableDetail(LeagueTableDetail leagueTableDetail) {
-        this.leagueTableDetail = leagueTableDetail;
-    }
 }

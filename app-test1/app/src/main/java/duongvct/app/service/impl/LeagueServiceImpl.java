@@ -52,9 +52,15 @@ public class LeagueServiceImpl implements LeagueService {
 
     @Override
     public void createLeague(League league) {
+        // Save the league first to generate the ID
+        League savedLeague = leagueRepository.save(league);
+
+        // Create and set the LeagueTable
         LeagueTable leagueTable = new LeagueTable();
-        leagueTable.setLeague(league);
-        league.setLeagueTable(leagueTable);
-        leagueRepository.save(league);
+        leagueTable.setLeague(savedLeague);
+        savedLeague.setLeagueTable(leagueTable);
+
+        // Save the league again with the LeagueTable
+        leagueRepository.save(savedLeague);
     }
 }

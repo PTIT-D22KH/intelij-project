@@ -37,8 +37,8 @@ public class TeamTableDetail {
     private Team team;
 
     @ManyToOne
-    @JoinColumn(name="league_table_detail_id")
-    private LeagueTableDetail leagueTableDetail;
+    @JoinColumn(name="league_table_id")
+    private LeagueTable leagueTable;
 
 
 
