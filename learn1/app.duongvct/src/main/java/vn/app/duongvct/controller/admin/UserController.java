@@ -43,14 +43,14 @@ public class UserController {
     }
 
     @PostMapping("/admin/user/create")
-    public String createUser(Model model, @ModelAttribute @Valid User hoidanit, BindingResult bindingResult, @RequestParam("hoidanitFile")MultipartFile file) {
-        List<FieldError> errors = bindingResult.getFieldErrors();
+    public String createUser(Model model, @ModelAttribute("newUser") @Valid User hoidanit, BindingResult newUserBindingResult, @RequestParam("hoidanitFile")MultipartFile file) {
+        List<FieldError> errors = newUserBindingResult.getFieldErrors();
         for (FieldError error : errors) {
-            System.out.println(error.getObjectName() + "-" + error.getDefaultMessage());
+            System.out.println(error.getField() + "-" + error.getDefaultMessage());
         }
-//        if (bindingResult.hasErrors()) {
-//            return ""
-//        }
+        if (newUserBindingResult.hasErrors()) {
+            return "/admin/user/create";
+        }
         String avatar = this.uploadService.handleSaveUploadFile(file, "avatar");
         String hashPassword = this.passwordEncoder.encode(hoidanit.getPassword());
         hoidanit.setAvatar(avatar);
