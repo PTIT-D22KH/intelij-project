@@ -3,8 +3,9 @@ package vn.app.duongvct.controller.admin;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import vn.app.duongvct.domain.User;
-import vn.app.duongvct.repository.UserRepository;
+import vn.app.duongvct.service.UploadService;
 import vn.app.duongvct.service.UserService;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -14,9 +15,11 @@ import java.util.List;
 @Controller
 public class UserController {
     private final UserService userService;
+    private final UploadService uploadService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UploadService uploadService) {
         this.userService = userService;
+        this.uploadService = uploadService;
     }
 
     @GetMapping("")
@@ -41,8 +44,10 @@ public class UserController {
     }
 
     @PostMapping("/admin/user/create")
-    public String createUser(Model model, @ModelAttribute User hoidanit) {
-        this.userService.handleSaveUser(hoidanit);
+    public String createUser(Model model, @ModelAttribute User hoidanit, @RequestParam("hoidanitFile")MultipartFile file) {
+        String avatar = this.uploadService.handleSaveUploadFile(file, "avatar");
+        System.out.println(avatar);
+//        this.userService.handleSaveUser(hoidanit);
         return "redirect:/admin/user";
     }
     @GetMapping("/admin/user/{id}")
