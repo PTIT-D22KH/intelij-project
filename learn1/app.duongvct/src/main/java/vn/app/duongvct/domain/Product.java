@@ -1,6 +1,10 @@
 package vn.app.duongvct.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
@@ -10,9 +14,29 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name, image, detailDesc, shortDesc, factory, target;
-    private long quantity, sold;
 
+    @NotNull
+    @NotEmpty(message = "Tên sản phẩm không được để trống")
+    private String name;
+    private String image;
+
+    @NotNull
+    @NotEmpty(message = "Mô tả chi tiết không được để trống")
+    private String detailDesc;
+
+    @NotNull
+    @NotEmpty(message = "Mô tả vắn tắt không được để trồng")
+    private String shortDesc;
+    private String factory;
+    private String target;
+
+    @NotNull
+    @Min(value = 1, message = "Số lượng cần lớn hơn hoặc bằng 1")
+    private long quantity;
+    private long sold;
+
+    @NotNull
+    @DecimalMin(value = "0", inclusive = false, message = "Giá phải lớn hơn 0")
     private double price;
 
 
