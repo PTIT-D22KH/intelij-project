@@ -44,6 +44,7 @@
                                     <th>Email</th>
                                     <th>Phone Number</th>
                                     <th>Address</th>
+                                    <th>Role</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -54,6 +55,7 @@
                                         <td>${user.email}</td>
                                         <td>${user.phone}</td>
                                         <td>${user.address}</td>
+                                        <td>${user.role.name}</td>
                                         <td>
                                             <a href="/admin/user/${user.id}" class="btn btn-success">View</a>
                                             <a href="/admin/user/update/${user.id}" class="btn btn-warning">Update</a>
