@@ -3,6 +3,7 @@ package vn.app.duongvct.service;
 import org.springframework.stereotype.Service;
 import vn.app.duongvct.domain.Role;
 import vn.app.duongvct.domain.User;
+import vn.app.duongvct.domain.dto.RegisterDTO;
 import vn.app.duongvct.repository.RoleRepository;
 import vn.app.duongvct.repository.UserRepository;
 
@@ -44,5 +45,12 @@ public class UserService {
     }
     public Role getRoleByName(String name) {
         return this.roleRepository.findByName(name);
+    }
+    public User registerDTOtoUser(RegisterDTO registerDTO) {
+        User user = new User();
+        user.setFullName(registerDTO.getFirstName() + " " + registerDTO.getLastName());
+        user.setEmail(registerDTO.getEmail());
+        user.setPassword(registerDTO.getPassword());
+        return user;
     }
 }
