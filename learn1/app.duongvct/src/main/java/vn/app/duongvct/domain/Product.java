@@ -22,6 +22,7 @@ public class Product {
 
     @NotNull
     @NotEmpty(message = "Mô tả chi tiết không được để trống")
+    @Column(columnDefinition = "MEDIUMTEXT")
     private String detailDesc;
 
     @NotNull

@@ -62,7 +62,7 @@
                           <li class="list-group-item">Target: ${product.target}</li>
                         </ul>
                       </div>
-                      <a href="/admin/user" class="btn btn-success mt-2">Back</a>
+                      <a href="/admin/product" class="btn btn-success mt-2">Back</a>
                     </div>
                   </div>
                 </div>

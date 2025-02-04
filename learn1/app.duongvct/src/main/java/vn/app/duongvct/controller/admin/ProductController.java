@@ -73,6 +73,7 @@ public class ProductController {
     public String postUpdateUser(Model model, @ModelAttribute("newProduct") @Valid Product product,
                                  BindingResult newProductBindingResult,
                                  @RequestParam("hoidanitFile") MultipartFile file) {
+        System.out.println(product);
         // Validate
         if (newProductBindingResult.hasErrors()) {
             return "/admin/product/update";
