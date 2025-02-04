@@ -1,8 +1,11 @@
 package vn.app.duongvct.controller.client;
 
+import jakarta.validation.Valid;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +29,6 @@ public class HomePageController {
         this.passwordEncoder = passwordEncoder;
     }
 
-
     @GetMapping("/")
     public String getHomePage(Model model) {
         List<Product> products = this.productService.getAllProducts();
@@ -34,18 +36,33 @@ public class HomePageController {
         return "client/homepage/show";
     }
 
-
     @GetMapping("/register")
     public String getRegisterPage(Model model) {
         model.addAttribute("registerUser", new RegisterDTO());
         return "client/auth/register";
     }
+
     @PostMapping("/register")
-    public String handleRegister(@ModelAttribute("registerUser") RegisterDTO registerDTO) {
+    public String handleRegister(@ModelAttribute("registerUser") @Valid RegisterDTO registerDTO,
+                                 BindingResult bindingResult) {
+
+        List<FieldError> errors = bindingResult.getFieldErrors();
+        for (FieldError error : errors) {
+            System.out.println(" >>>>>>> " + error.getField() + " - " + error.getDefaultMessage());
+        }
+        // Validate
+        if (bindingResult.hasErrors()) {
+            return "client/auth/register";
+        }
+
         User user = this.userService.registerDTOtoUser(registerDTO);
+
         String hashPassword = this.passwordEncoder.encode(user.getPassword());
+
         user.setPassword(hashPassword);
         user.setRole(this.userService.getRoleByName("USER"));
+
+        // save
         this.userService.handleSaveUser(user);
         return "redirect:/login";
     }

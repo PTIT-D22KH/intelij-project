@@ -1,5 +1,8 @@
 package vn.app.duongvct.domain.dto;
 
+import vn.app.duongvct.service.validator.RegisterChecked;
+
+@RegisterChecked
 public class RegisterDTO {
     private String firstName;
     private String lastName;
