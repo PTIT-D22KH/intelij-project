@@ -24,7 +24,7 @@ public class Cart {
     private User user;
     // cart_detail_id:
     @OneToMany(mappedBy = "cart")
-    List<CartDetail> cartDetail;
+    List<CartDetail> cartDetails;
     public long getId() {
         return id;
     }
@@ -43,10 +43,10 @@ public class Cart {
     public void setUser(User user) {
         this.user = user;
     }
-    public List<CartDetail> getCartDetail() {
-        return cartDetail;
+    public List<CartDetail> getCartDetails() {
+        return cartDetails;
     }
-    public void setCartDetail(List<CartDetail> cartDetail) {
-        this.cartDetail = cartDetail;
+    public void setCartDetails(List<CartDetail> cartDetails) {
+        this.cartDetails = cartDetails;
     }
 }
