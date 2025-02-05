@@ -55,6 +55,8 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
             // Nếu login thành công thì cập nhật session
             session.setAttribute("fullName", user.getFullName());
             session.setAttribute("avatar", user.getAvatar());
+            session.setAttribute("id", user.getId());
+            session.setAttribute("email", user.getEmail());
         }
     }
 
